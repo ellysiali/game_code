@@ -12,7 +12,7 @@ public class Entity : MonoBehaviour
     public Rigidbody2D rigidBody { get; private set; }
     public Animator animator { get; private set; }
     public AnimationToStateMachine atsm { get; private set; }
-    public CapsuleCollider2D capsuleCollider;
+    public BoxCollider2D boxCollider;
     #endregion
 
     #region Other Variables
@@ -27,27 +27,18 @@ public class Entity : MonoBehaviour
     #endregion
 
     #region Unity Callback Functions
-    /**************************************************************************
-    Function: 	 Start
-    Description: Initializes the necessary variables before the first update
-    *************************************************************************/
     public virtual void Start()
     {
         facingDirection = 1;
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         atsm = GetComponent<AnimationToStateMachine>();
-        capsuleCollider = GetComponent<CapsuleCollider2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
         stateMachine = new FiniteStateMachine();
 
         currentHealth = entityData.maxHealth;
         healthIcon.gameObject.SetActive(false);
     }
-
-    /**************************************************************************
-    Function: 	 Update
-    Description: Once per frame, implements the following code
-    *************************************************************************/
     public virtual void Update()
     {
         stateMachine.CurrentState.LogicUpdate();
@@ -59,11 +50,6 @@ public class Entity : MonoBehaviour
             ApplyTouchDamage();
         }
     }
-
-    /**************************************************************************
-    Function: 	 FixUpdate
-    Description: 
-    *************************************************************************/
     public virtual void FixedUpdate()
     {
         stateMachine.CurrentState.PhysicsUpdate();
@@ -71,20 +57,11 @@ public class Entity : MonoBehaviour
     #endregion
 
     #region Set Functions
-    /**************************************************************************
-    Function: 	 SetVelocityX
-    Description: Sets the x velocity (movement speed) of the entity
-    *************************************************************************/
     public virtual void SetVelocityX(float velocity)
     {
         velocityWorkspace.Set(facingDirection * velocity, rigidBody.velocity.y);
         rigidBody.velocity = velocityWorkspace;
     }
-
-    /**************************************************************************
-    Function: 	 SetVelocityY
-    Description: Sets the y velocity (jump speed) of the entity
-    *************************************************************************/
     public virtual void SetVelocityY(float velocity)
     {
         velocityWorkspace.Set(rigidBody.velocity.x, velocity);
@@ -243,7 +220,7 @@ public class Entity : MonoBehaviour
     }
     public virtual void ApplyTouchDamage()
     {
-        Collider2D hit = Physics2D.OverlapCapsule(capsuleCollider.transform.position, capsuleCollider.size, capsuleCollider.direction, 0f, entityData.playerLayerMask);
+        Collider2D hit = Physics2D.OverlapBox(boxCollider.transform.position, boxCollider.size, 0f, entityData.playerLayerMask);
 
         if (hit != null)
         {
@@ -254,23 +231,19 @@ public class Entity : MonoBehaviour
             hit.SendMessage("Damage", attackDetails);
         }
     }
-    public virtual void OnDrawGizmos()
-    {
-        //// GroundCheck
-        //Gizmos.DrawLine(ledgeCheck.position,
-        //                ledgeCheck.position + (Vector3)(Vector2.down * entityData.ledgeCheckDistance));
 
-        //// WallCheck
-        //Gizmos.DrawLine(wallCheck.position,
-        //                wallCheck.position + (Vector3)(Vector2.right * facingDirection * entityData.wallCheckDistance));
+    //public virtual void OnDrawGizmos()
+    //{
+    //    // WallCheck
+    //    Gizmos.DrawLine(wallCheck.position,
+    //                    wallCheck.position + (Vector3)(Vector2.right * facingDirection * entityData.wallCheckDistance));
 
-        //AgroCheck
-        //Gizmos.DrawWireSphere(transform.position, entityData.minAgroDistance);
+    //    // LedgeCheck
+    //    Gizmos.DrawLine(wallCheck.position,
+    //                    wallCheck.position + (Vector3)(Vector2.down * facingDirection * entityData.wallCheckDistance));
 
-        //Gizmos.DrawLine(topLeft, topRight);
-        //Gizmos.DrawLine(topLeft, botLeft);
-        //Gizmos.DrawLine(botLeft, botRight);
-        //Gizmos.DrawLine(botRight, topRight);
-    }
+    //    // GroundCheck
+    //    Gizmos.DrawWireSphere(groundCheck.position, entityData.groundCheckRadius);
+    //}
     #endregion
 }

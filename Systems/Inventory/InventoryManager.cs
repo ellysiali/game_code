@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// TODO: implement reading amount on both inventory and store managers
-
 public class InventoryManager : MonoBehaviour
 {
     #region Components

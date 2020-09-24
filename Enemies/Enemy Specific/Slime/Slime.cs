@@ -46,13 +46,6 @@ public class Slime : Entity
 
         stateMachine.Initialize(moveState);
     }
-
-    //public override void OnDrawGizmos()
-    //{
-    //    // Melee range
-    //    Gizmos.DrawWireSphere(meleeAttackPosition.position, meleeAttackStateData.attackRadius);
-    //}
-
     public override void Damage(AttackDetails attackDetails)
     {
         base.Damage(attackDetails);
