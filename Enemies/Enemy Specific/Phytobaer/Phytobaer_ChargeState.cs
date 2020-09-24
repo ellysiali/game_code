@@ -30,27 +30,14 @@ public class Phytobaer_ChargeState : ChargeState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        if (performCloseRangeAction)
+        if (performCloseRangeAction && phytobaer.CheckCanAttack())
         {
             stateMachine.ChangeState(phytobaer.meleeAttackState);
         }
 
-        else if (isDetectingWall || !isDetectingLedge)
+        else if (!isPlayerInMaxAggroRange)
         {
-            stateMachine.ChangeState(phytobaer.lookForPlayerState);
-        }
-
-        else if (isChargeTimeOver)
-        {
-            if (isPlayerInMinAgroRange)
-            {
-                stateMachine.ChangeState(phytobaer.playerDetectedState);
-            }
-            else
-            {
-                stateMachine.ChangeState(phytobaer.lookForPlayerState);
-            }
+            stateMachine.ChangeState(phytobaer.idleState);
         }
     }
 

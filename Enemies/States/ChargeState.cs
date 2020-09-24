@@ -5,7 +5,7 @@ using UnityEngine;
 public class ChargeState : State
 {
     protected D_ChargeState stateData;
-    protected bool isPlayerInMinAgroRange, isDetectingLedge, isDetectingWall, isChargeTimeOver,
+    protected bool isPlayerInMinAggroRange, isPlayerInMaxAggroRange, isDetectingLedge, isDetectingWall, isChargeTimeOver,
                    performCloseRangeAction;
 
     public ChargeState(Entity entity, FiniteStateMachine stateMachine,
@@ -18,18 +18,25 @@ public class ChargeState : State
     public override void DoChecks()
     {
         base.DoChecks();
-        isPlayerInMinAgroRange = entity.CheckEnemyInMinAgroRange();
-        isDetectingLedge = entity.CheckLedge();
-        isDetectingWall = entity.CheckWall();
-        entity.SetVelocityX(stateData.chargeSpeed);
+        if (entity.CheckEnemyInMaxAggroRange() && !entity.CheckFacingEnemy() && entity.CheckCanAttack())
+        {
+            entity.Flip();
+        }
+        entity.SetVelocityX(stateData.movementSpeed);
 
+        if ((!entity.CheckLedge() || entity.CheckWall()) && entity.CheckGround())
+        {
+            entity.SetVelocityY(stateData.jumpVelocity);
+        }
+
+        isPlayerInMinAggroRange = entity.CheckEnemyInMinAggroRange();
+        isPlayerInMaxAggroRange = entity.CheckEnemyInMaxAggroRange();
         performCloseRangeAction = entity.CheckEnemyInCloseRangeAction();
     }
 
     public override void Enter()
     {
         base.Enter();
-        isChargeTimeOver = false;
     }
 
     public override void Exit()
@@ -40,10 +47,6 @@ public class ChargeState : State
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (Time.time >= startTime + stateData.chargeTime)
-        {
-            isChargeTimeOver = true;
-        }
     }
 
     public override void PhysicsUpdate()

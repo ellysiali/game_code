@@ -16,7 +16,7 @@ public class AttackState : State
     public override void DoChecks()
     {
         base.DoChecks();
-        isPlayerInMinAgroRange = entity.CheckEnemyInMinAgroRange();
+        isPlayerInMinAgroRange = entity.CheckEnemyInMinAggroRange();
     }
 
     public override void Enter()
@@ -24,6 +24,7 @@ public class AttackState : State
         isAnimationFinished = false;
         entity.atsm.attackState = this;
         entity.SetVelocityX(0f);
+        entity.SetLastAttack();
         base.Enter();
     }
 

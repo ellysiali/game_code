@@ -53,9 +53,9 @@ public class Slime_MoveState : MoveState
         {
             stateMachine.ChangeState(slime.followState);
         }
-        else if (isPlayerInMinAgroRange)
+        else if (isPlayerInMinAggroRange)
         {
-            stateMachine.ChangeState(slime.playerDetectedState);
+            stateMachine.ChangeState(slime.chargeState);
         }
         else if (isMoveTimeOver)
         {

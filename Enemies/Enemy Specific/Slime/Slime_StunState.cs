@@ -44,8 +44,7 @@ public class Slime_StunState : StunState
 
             else
             {
-                slime.lookForPlayerState.SetTurmImmediately(true);
-                stateMachine.ChangeState(slime.lookForPlayerState);
+                stateMachine.ChangeState(slime.idleState);
             }
         }    
     }

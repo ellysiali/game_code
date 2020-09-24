@@ -14,8 +14,8 @@ public class D_Entity : ScriptableObject
     [Header("Check Variables")]
     public float wallCheckDistance = 0.2f;
     public float ledgeCheckDistance = 0.4f;
-    public float minAgroDistance = 3f;
-    public float maxAgroDistance = 4f;
+    public float minAggroDistance = 3f;
+    public float maxAggroDistance = 4f;
     public float closeRangeActionDistance = 1f;
     public float groundCheckRadius = 0.3f;
     public float touchDamageWidth = 2f;
@@ -23,6 +23,7 @@ public class D_Entity : ScriptableObject
     public float heightUntilJump = 1f;
     public float maxPlayerRange = 6f;
     public float minPlayerRange = 1.5f;
+    public float attackCooldown = 2f;
 
     [Header("LayerMasks & GameObjects")]
     public LayerMask platformLayerMask;

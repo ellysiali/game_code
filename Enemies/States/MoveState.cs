@@ -8,7 +8,7 @@ public class MoveState : State
 
     protected float moveTime;
     protected bool isDetectingWall, isDetectingLedge, isMoveTimeOver,
-                   isPlayerInMinAgroRange;
+                   isPlayerInMinAggroRange;
 
     /**************************************************************************
     Function: 	 MoveState
@@ -80,7 +80,7 @@ public class MoveState : State
         entity.SetVelocityX(stateData.movementSpeed);
         isDetectingLedge = entity.CheckLedge();
         isDetectingWall = entity.CheckWall();
-        isPlayerInMinAgroRange = entity.CheckEnemyInMinAgroRange();
+        isPlayerInMinAggroRange = entity.CheckEnemyInMinAggroRange();
     }
 
     /**************************************************************************

@@ -19,7 +19,7 @@ public class Entity : MonoBehaviour
     public int facingDirection { get; private set; }
     private Vector2 velocityWorkspace;
     private int lastDamageDirection;
-    private float currentHealth;
+    private float currentHealth, lastAttack = -100f;
     private AttackDetails attackDetails;
     protected bool isStunned, isDead;
     public bool isFriendly;
@@ -35,6 +35,11 @@ public class Entity : MonoBehaviour
         atsm = GetComponent<AnimationToStateMachine>();
         boxCollider = GetComponent<BoxCollider2D>();
         stateMachine = new FiniteStateMachine();
+
+        if(isFriendly)
+        {
+            SetFriendly();
+        }
 
         currentHealth = entityData.maxHealth;
         healthIcon.gameObject.SetActive(false);
@@ -67,6 +72,13 @@ public class Entity : MonoBehaviour
         velocityWorkspace.Set(rigidBody.velocity.x, velocity);
         rigidBody.velocity = velocityWorkspace;
     }
+    public virtual void SetLastAttack() => lastAttack = Time.time;
+    public virtual void SetFriendly()
+    {
+        isFriendly = true;
+        gameObject.tag = "Summon";
+        gameObject.layer = LayerMask.NameToLayer("Friendly");
+    }
     #endregion
 
     #region Check Functions
@@ -82,14 +94,14 @@ public class Entity : MonoBehaviour
                          entityData.ledgeCheckDistance,
                          entityData.platformLayerMask);
     }
-    public virtual bool CheckEnemyInMinAgroRange()
+    public virtual bool CheckEnemyInMinAggroRange()
     {
         if (isFriendly)
         {
-            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.minAgroDistance, entityData.enemyLayerMask);
+            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.minAggroDistance, entityData.enemyLayerMask);
             if (colliderResults)
             {
-                return Physics2D.OverlapCircle(transform.position, entityData.minAgroDistance, entityData.enemyLayerMask);
+                return Physics2D.OverlapCircle(transform.position, entityData.minAggroDistance, entityData.enemyLayerMask);
             }
             else
             {
@@ -98,18 +110,18 @@ public class Entity : MonoBehaviour
         }
         else
         {
-            return Physics2D.OverlapCircle(transform.position, entityData.minAgroDistance, entityData.playerLayerMask);
+            return Physics2D.OverlapCircle(transform.position, entityData.minAggroDistance, entityData.playerLayerMask);
 
         }
     }
-    public virtual bool CheckEnemyInMaxAgroRange()
+    public virtual bool CheckEnemyInMaxAggroRange()
     {
         if (isFriendly)
         {
-            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.maxAgroDistance, entityData.enemyLayerMask);
+            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.enemyLayerMask);
             if (colliderResults)
             {
-                return Physics2D.OverlapCircle(transform.position, entityData.maxAgroDistance, entityData.enemyLayerMask);
+                return Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.enemyLayerMask);
             }
             else
             {
@@ -118,7 +130,7 @@ public class Entity : MonoBehaviour
         }
         else
         {
-            return Physics2D.OverlapCircle(transform.position, entityData.maxAgroDistance, entityData.playerLayerMask);
+            return Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.playerLayerMask);
         }
     }
     public virtual bool CheckEnemyInCloseRangeAction()
@@ -149,7 +161,7 @@ public class Entity : MonoBehaviour
     {
         if (isFriendly)
         {
-            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.maxAgroDistance, entityData.enemyLayerMask);
+            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.enemyLayerMask);
             return colliderResults.transform.position.x > transform.position.x && facingDirection == 1 || colliderResults.transform.position.x < transform.position.x && facingDirection == -1;
         }
         else
@@ -167,6 +179,7 @@ public class Entity : MonoBehaviour
         return Physics2D.Raycast(transform.position, (player.position - transform.position).normalized,
                                   entityData.minPlayerRange, entityData.playerLayerMask);
     }
+    public virtual bool CheckCanAttack() => Time.time >= lastAttack + entityData.attackCooldown;
     public virtual bool CheckFacingPlayer() => player.transform.position.x > transform.position.x && facingDirection == 1 || player.transform.position.x < transform.position.x && facingDirection == -1;
     public virtual Vector2 CheckPlayerPosition() => player.position;
     #endregion
@@ -232,18 +245,18 @@ public class Entity : MonoBehaviour
         }
     }
 
-    //public virtual void OnDrawGizmos()
-    //{
-    //    // WallCheck
-    //    Gizmos.DrawLine(wallCheck.position,
-    //                    wallCheck.position + (Vector3)(Vector2.right * facingDirection * entityData.wallCheckDistance));
+    public virtual void OnDrawGizmos()
+    {
+        //// WallCheck
+        //Gizmos.DrawLine(wallCheck.position,
+        //                wallCheck.position + (Vector3)(Vector2.right * facingDirection * entityData.wallCheckDistance));
 
-    //    // LedgeCheck
-    //    Gizmos.DrawLine(wallCheck.position,
-    //                    wallCheck.position + (Vector3)(Vector2.down * facingDirection * entityData.wallCheckDistance));
+        //// LedgeCheck
+        //Gizmos.DrawLine(wallCheck.position,
+        //                wallCheck.position + (Vector3)(Vector2.down * facingDirection * entityData.wallCheckDistance));
 
-    //    // GroundCheck
-    //    Gizmos.DrawWireSphere(groundCheck.position, entityData.groundCheckRadius);
-    //}
+        //// GroundCheck
+        //Gizmos.DrawWireSphere(groundCheck.position, entityData.groundCheckRadius);
+    }
     #endregion
 }

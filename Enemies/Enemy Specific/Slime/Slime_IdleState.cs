@@ -53,9 +53,9 @@ public class Slime_IdleState : IdleState
         {
             stateMachine.ChangeState(slime.followState);
         }
-        else if (isEnemyInMinAgroRange)
+        else if (isEnemyInMinAggroRange)
         {
-            stateMachine.ChangeState(slime.playerDetectedState);
+            stateMachine.ChangeState(slime.chargeState);
         }
         else if (isIdleTimeOver)
         {

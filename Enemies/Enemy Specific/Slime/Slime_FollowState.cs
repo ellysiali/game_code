@@ -28,11 +28,11 @@ public class Slime_FollowState : FollowState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (isByPlayer)
+        if (isInMinPlayerRange)
         {
             stateMachine.ChangeState(slime.idleState);
         }
-        else if (!isByPlayer && isFollowDurationOver)
+        else if (!isInMinPlayerRange && outOfRange)
         {
             slime.transform.position = slime.CheckPlayerPosition();
             stateMachine.ChangeState(slime.idleState);

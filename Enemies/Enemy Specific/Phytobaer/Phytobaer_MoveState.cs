@@ -27,9 +27,9 @@ public class Phytobaer_MoveState : MoveState
         {
             stateMachine.ChangeState(phytobaer.followState);
         }
-        else if (isPlayerInMinAgroRange)
+        else if (isPlayerInMinAggroRange)
         {
-            stateMachine.ChangeState(phytobaer.playerDetectedState);
+            stateMachine.ChangeState(phytobaer.chargeState);
         }
         else if (isMoveTimeOver)
         {

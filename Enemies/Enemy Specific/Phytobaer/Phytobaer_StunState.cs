@@ -44,8 +44,7 @@ public class Phytobaer_StunState : StunState
 
             else
             {
-                phytobaer.lookForPlayerState.SetTurmImmediately(true);
-                stateMachine.ChangeState(phytobaer.lookForPlayerState);
+                stateMachine.ChangeState(phytobaer.idleState);
             }
         }    
     }

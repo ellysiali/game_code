@@ -20,7 +20,7 @@ public class StunState : State
         base.DoChecks();
         isGrounded = entity.CheckGround();
         performCloseRangeAction = entity.CheckEnemyInCloseRangeAction();
-        isPlayerInMinAgroRange = entity.CheckEnemyInMinAgroRange();
+        isPlayerInMinAgroRange = entity.CheckEnemyInMinAggroRange();
     }
 
     public override void Enter()

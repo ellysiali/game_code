@@ -6,7 +6,7 @@ public class IdleState : State
 {
     protected D_IdleState stateData;
     protected float idleTime;
-    protected bool isIdleTimeOver, flipAfterIdle, isEnemyInMinAgroRange;
+    protected bool isIdleTimeOver, flipAfterIdle, isEnemyInMinAggroRange;
 
     /**************************************************************************
     Function: 	 IdleState
@@ -78,7 +78,7 @@ public class IdleState : State
     *************************************************************************/
     public override void DoChecks()
     {
-        isEnemyInMinAgroRange = entity.CheckEnemyInMinAgroRange();
+        isEnemyInMinAggroRange = entity.CheckEnemyInMinAggroRange();
     }
 
     /**************************************************************************

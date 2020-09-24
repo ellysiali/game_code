@@ -6,7 +6,8 @@ public class FollowState : State
 {
     D_FollowState stateData;
 
-    public bool isByPlayer, isFollowDurationOver;
+    protected bool isInMinPlayerRange, isInMaxPlayerRange, outOfRange;
+    protected float lastInMaxPlayerRange;
 
     public FollowState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, D_FollowState stateData) : base(entity, stateMachine, animationBoolName)
     {
@@ -17,7 +18,13 @@ public class FollowState : State
     {
         base.DoChecks();
 
-        isByPlayer = entity.CheckPlayerInMinRange();
+        isInMinPlayerRange = entity.CheckPlayerInMinRange();
+        isInMaxPlayerRange = entity.CheckPlayerInMaxRange();
+
+        if(isInMaxPlayerRange)
+        {
+            lastInMaxPlayerRange = Time.time;
+        }    
 
         if (!entity.CheckFacingPlayer())
         {
@@ -33,8 +40,10 @@ public class FollowState : State
     public override void Enter()
     {
         base.Enter();
-        isByPlayer = false;
-        isFollowDurationOver = false;
+        lastInMaxPlayerRange = startTime;
+        isInMinPlayerRange = false;
+        isInMaxPlayerRange = false;
+        outOfRange = false;
     }
 
     public override void Exit()
@@ -45,9 +54,9 @@ public class FollowState : State
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (Time.time >= startTime + stateData.followDuration)
+        if (Time.time >= lastInMaxPlayerRange + stateData.followDuration)
         {
-            isFollowDurationOver = true;
+            outOfRange = true;
         }
     }
 

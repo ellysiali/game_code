@@ -23,6 +23,11 @@ public class MeleeAttackState : AttackState
     public override void Enter()
     {
         base.Enter();
+        if (!entity.CheckFacingEnemy())
+        {
+            entity.Flip();
+        }
+
         attackDetails.damageAmount = stateData.damage;
         attackDetails.position = entity.transform.position;
 

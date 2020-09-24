@@ -28,11 +28,11 @@ public class Phytobaer_FollowState : FollowState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (isByPlayer)
+        if (isInMinPlayerRange)
         {
             stateMachine.ChangeState(phytobaer.idleState);
         }
-        else if (!isByPlayer && isFollowDurationOver)
+        else if (!isInMinPlayerRange && outOfRange)
         {
             phytobaer.transform.position = phytobaer.CheckPlayerPosition();
             stateMachine.ChangeState(phytobaer.idleState);

@@ -33,14 +33,7 @@ public class Phytobaer_MeleeAttackState : MeleeAttackState
         base.LogicUpdate();
         if (isAnimationFinished)
         {
-         if (isPlayerInMinAgroRange)
-            {
-                stateMachine.ChangeState(phytobaer.playerDetectedState);
-            }
-            else
-            {
-                stateMachine.ChangeState(phytobaer.lookForPlayerState);
-            }
+            stateMachine.ChangeState(phytobaer.idleState);
         }
     }
     public override void PhysicsUpdate()

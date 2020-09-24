@@ -39,14 +39,7 @@ public class Slime_MeleeAttackState : MeleeAttackState
         base.LogicUpdate();
         if (isAnimationFinished)
         {
-         if (isPlayerInMinAgroRange)
-            {
-                stateMachine.ChangeState(slime.playerDetectedState);
-            }
-            else
-            {
-                stateMachine.ChangeState(slime.lookForPlayerState);
-            }
+            stateMachine.ChangeState(slime.idleState);
         }
     }
 

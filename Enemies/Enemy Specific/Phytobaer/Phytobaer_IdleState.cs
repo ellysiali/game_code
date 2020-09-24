@@ -26,9 +26,9 @@ public class Phytobaer_IdleState : IdleState
         {
             stateMachine.ChangeState(phytobaer.followState);
         }
-        else if (isEnemyInMinAgroRange)
+        else if (isEnemyInMinAggroRange)
         {
-            stateMachine.ChangeState(phytobaer.playerDetectedState);
+            stateMachine.ChangeState(phytobaer.chargeState);
         }
         else if (isIdleTimeOver)
         {

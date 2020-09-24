@@ -31,26 +31,14 @@ public class Slime_ChargeState : ChargeState
     {
         base.LogicUpdate();
 
-        if (performCloseRangeAction)
+        if (performCloseRangeAction && slime.CheckCanAttack())
         {
             stateMachine.ChangeState(slime.meleeAttackState);
         }
 
-        else if (isDetectingWall || !isDetectingLedge)
+        else if (!isPlayerInMaxAggroRange)
         {
-            stateMachine.ChangeState(slime.lookForPlayerState);
-        }
-
-        else if (isChargeTimeOver)
-        {
-            if (isPlayerInMinAgroRange)
-            {
-                stateMachine.ChangeState(slime.playerDetectedState);
-            }
-            else
-            {
-                stateMachine.ChangeState(slime.lookForPlayerState);
-            }
+            stateMachine.ChangeState(slime.idleState);
         }
     }
 
