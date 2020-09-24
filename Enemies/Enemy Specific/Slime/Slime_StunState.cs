@@ -6,8 +6,8 @@ public class Slime_StunState : StunState
 {
     private Slime slime;
     public Slime_StunState(Entity entity, FiniteStateMachine stateMachine, 
-                           string animationBoolName, D_StunState stateData, Slime slime) : 
-                           base(entity, stateMachine, animationBoolName, stateData)
+                           string animationBoolName, Slime slime) : 
+                           base(entity, stateMachine, animationBoolName)
     {
         this.slime = slime;
     }

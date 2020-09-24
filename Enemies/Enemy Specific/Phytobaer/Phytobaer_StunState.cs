@@ -5,9 +5,7 @@ using UnityEngine;
 public class Phytobaer_StunState : StunState
 {
     private Phytobaer phytobaer;
-    public Phytobaer_StunState(Entity entity, FiniteStateMachine stateMachine, 
-                           string animationBoolName, D_StunState stateData, Phytobaer phytobaer) : 
-                           base(entity, stateMachine, animationBoolName, stateData)
+    public Phytobaer_StunState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, Phytobaer phytobaer) : base(entity, stateMachine, animationBoolName)
     {
         this.phytobaer = phytobaer;
     }

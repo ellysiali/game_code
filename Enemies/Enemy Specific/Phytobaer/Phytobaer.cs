@@ -9,7 +9,6 @@ public class Phytobaer : Entity
     [SerializeField] protected D_MoveState moveStateData;
     [SerializeField] protected D_ChargeState chargeStateData;
     [SerializeField] protected D_MeleeAttackState meleeAttackStateData;
-    [SerializeField] protected D_StunState stunStateData;
     [SerializeField] protected D_DeadState deadStateData;
     [SerializeField] protected D_FollowState followStateData;
 
@@ -20,6 +19,7 @@ public class Phytobaer : Entity
     public Phytobaer_StunState stunState { get; private set; }
     public Phytobaer_DeadState deadState { get; private set; }
     public Phytobaer_FollowState followState { get; private set; }
+    public Phytobaer_TeleportState teleportState { get; private set; }
 
     [SerializeField] private Transform meleeAttackPosition;
 
@@ -30,9 +30,10 @@ public class Phytobaer : Entity
         moveState = new Phytobaer_MoveState(this, stateMachine, "Move", moveStateData, this);
         chargeState = new Phytobaer_ChargeState(this, stateMachine, "Charge", chargeStateData, this);
         meleeAttackState = new Phytobaer_MeleeAttackState(this, stateMachine, "MeleeAttack", meleeAttackPosition, meleeAttackStateData, this);
-        stunState = new Phytobaer_StunState(this, stateMachine, "Stun", stunStateData, this);
+        stunState = new Phytobaer_StunState(this, stateMachine, "Stun", this);
         deadState = new Phytobaer_DeadState(this, stateMachine, "Dead", deadStateData, this);
         followState = new Phytobaer_FollowState(this, stateMachine, "Move", followStateData, this);
+        teleportState = new Phytobaer_TeleportState(this, stateMachine, "Teleport", this);
 
         stateMachine.Initialize(moveState);
     }

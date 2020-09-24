@@ -9,7 +9,6 @@ public class Slime : Entity
     [SerializeField] protected D_MoveState moveStateData;
     [SerializeField] protected D_ChargeState chargeStateData;
     [SerializeField] protected D_MeleeAttackState meleeAttackStateData;
-    [SerializeField] protected D_StunState stunStateData;
     [SerializeField] protected D_DeadState deadStateData;
     [SerializeField] protected D_FollowState followStateData;
 
@@ -20,6 +19,7 @@ public class Slime : Entity
     public Slime_StunState stunState { get; private set; }
     public Slime_DeadState deadState { get; private set; }
     public Slime_FollowState followState { get; private set; }
+    public Slime_TeleportState teleportState { get; private set; }
 
     [SerializeField] private Transform meleeAttackPosition;
 
@@ -30,9 +30,10 @@ public class Slime : Entity
         moveState = new Slime_MoveState(this, stateMachine, "Move", moveStateData, this);
         chargeState = new Slime_ChargeState(this, stateMachine, "Charge", chargeStateData, this);
         meleeAttackState = new Slime_MeleeAttackState(this, stateMachine, "MeleeAttack", meleeAttackPosition, meleeAttackStateData, this);
-        stunState = new Slime_StunState(this, stateMachine, "Stun", stunStateData, this);
+        stunState = new Slime_StunState(this, stateMachine, "Stun", this);
         deadState = new Slime_DeadState(this, stateMachine, "Dead", deadStateData, this);
         followState = new Slime_FollowState(this, stateMachine, "Move", followStateData, this);
+        teleportState = new Slime_TeleportState(this, stateMachine, "Teleport", this);
 
         stateMachine.Initialize(moveState);
     }

@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 public class StunState : State
 {
-    protected D_StunState stateData;
+    private float stunTime = 0.5f;
 
     protected bool isStunTimeOver, isGrounded, isMovementStopped,
                    performCloseRangeAction, isPlayerInMinAgroRange;
 
-    public StunState(Entity entity, FiniteStateMachine stateMachine,
-                       string animationBoolName, D_StunState stateData) :
-                       base(entity, stateMachine, animationBoolName)
+    public StunState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName) :base(entity, stateMachine, animationBoolName)
     {
-        this.stateData = stateData;
     }
 
     public override void DoChecks()
@@ -38,12 +35,12 @@ public class StunState : State
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (Time.time >= startTime + stateData.stunTime)
+        if (Time.time >= startTime + stunTime)
         {
             isStunTimeOver = true;
         }
 
-        if(isGrounded && Time.time >= startTime + stateData.stunTime && !isMovementStopped)
+        if(isGrounded && Time.time >= startTime + stunTime && !isMovementStopped)
         {
             entity.SetVelocityX(0);
             isMovementStopped = true;

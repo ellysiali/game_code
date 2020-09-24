@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Phytobaer_FollowState : FollowState
+public class Phytobaer_TeleportState : TeleportState
 {
     private Phytobaer phytobaer;
-    public Phytobaer_FollowState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, D_FollowState stateData, Phytobaer phytobaer) : base(entity, stateMachine, animationBoolName, stateData)
+
+    public Phytobaer_TeleportState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, Phytobaer phytobaer) : base(entity, stateMachine, animationBoolName)
     {
         this.phytobaer = phytobaer;
     }
@@ -28,13 +29,9 @@ public class Phytobaer_FollowState : FollowState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (isInMinPlayerRange)
+        if (isTeleportTimeOver)
         {
             stateMachine.ChangeState(phytobaer.idleState);
-        }
-        else if (!isInMinPlayerRange && outOfRange)
-        {
-            stateMachine.ChangeState(phytobaer.teleportState);
         }
     }
 
