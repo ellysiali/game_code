@@ -33,7 +33,7 @@ public class Phytobaer_MeleeAttackState : MeleeAttackState
         base.LogicUpdate();
         if (isAnimationFinished)
         {
-            stateMachine.ChangeState(phytobaer.idleState);
+            stateMachine.ChangeState(phytobaer.chargeState);
         }
     }
     public override void PhysicsUpdate()

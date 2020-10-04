@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeAttackState : AttackState
+public class RangedAttackState : AttackState
 {
-    D_MeleeAttackState stateData;
-    protected AttackDetails attackDetails;
+    D_RangedAttackState stateData;
+    private AttackDetails attackDetails;
     private LayerMask enemyLayerMask;
+    private GameObject workspace;
 
-    public MeleeAttackState(Entity entity, FiniteStateMachine stateMachine, 
-                           string animationBoolName, Transform attackPosition, D_MeleeAttackState stateData) : 
+    public RangedAttackState(Entity entity, FiniteStateMachine stateMachine, 
+                           string animationBoolName, Transform attackPosition, D_RangedAttackState stateData) : 
                            base(entity, stateMachine, animationBoolName, attackPosition)
     {
         this.stateData = stateData;
@@ -31,7 +32,7 @@ public class MeleeAttackState : AttackState
         attackDetails.damageAmount = stateData.damage;
         attackDetails.position = entity.transform.position;
 
-        if(entity.isFriendly)
+        if (entity.isFriendly)
         {
             enemyLayerMask = stateData.enemyLayerMask;
             attackDetails.knockbackX = stateData.friendlyKnockbackX;
@@ -68,20 +69,8 @@ public class MeleeAttackState : AttackState
     public override void TriggerAttack()
     {
         base.TriggerAttack();
-
-        Collider2D detectedObject = Physics2D.OverlapCircle(attackPosition.position, stateData.attackRadius, enemyLayerMask);
-        if (detectedObject != null)
-        {
-            detectedObject.transform.SendMessage("Damage", attackDetails);
-        }
-
-        // Multihit
-        //Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attackPosition.position,
-        //                                                          stateData.attackRadius,
-        //                                                          layerMask);
-        //foreach (Collider2D collider in detectedObjects)
-        //{
-        //    collider.transform.SendMessage("Damage", attackDetails);
-        //}
+        workspace = Transform.Instantiate(stateData.projectile);
+        workspace.GetComponent<Projectile>().Initialize(attackDetails, entity.facingDirection * stateData.projectileSpeed, enemyLayerMask, entity.isFriendly);
+        workspace.transform.position = attackPosition.position;
     }
 }

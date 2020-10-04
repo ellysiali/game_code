@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Terracto_TeleportState : TeleportState
+public class Terracto_DeadState : DeadState
 {
     private Terracto terracto;
-
-    public Terracto_TeleportState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, Terracto terracto) : base(entity, stateMachine, animationBoolName)
+    public Terracto_DeadState(Entity entity, FiniteStateMachine stateMachine, 
+                           string animationBoolName, D_DeadState stateData, Terracto terracto) : 
+                           base(entity, stateMachine, animationBoolName, stateData)
     {
         this.terracto = terracto;
     }
@@ -29,14 +30,14 @@ public class Terracto_TeleportState : TeleportState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (isTeleportTimeOver)
-        {
-            stateMachine.ChangeState(terracto.idleState);
-        }
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        if (Time.time >= startTime + stateData.deadDuration)
+        {
+            stateMachine.ChangeState(terracto.moveState);
+        }
     }
 }

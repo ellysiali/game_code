@@ -6,7 +6,7 @@ public class StunState : State
     private float stunTime = 0.5f;
 
     protected bool isStunTimeOver, isGrounded, isMovementStopped,
-                   performCloseRangeAction, isPlayerInMinAgroRange;
+                   performCloseRangeAction, isPlayerInMinAggroRange;
 
     public StunState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName) :base(entity, stateMachine, animationBoolName)
     {
@@ -17,7 +17,7 @@ public class StunState : State
         base.DoChecks();
         isGrounded = entity.CheckGround();
         performCloseRangeAction = entity.CheckEnemyInCloseRangeAction();
-        isPlayerInMinAgroRange = entity.CheckEnemyInMinAggroRange();
+        isPlayerInMinAggroRange = entity.CheckEnemyInMinAggroRange();
     }
 
     public override void Enter()

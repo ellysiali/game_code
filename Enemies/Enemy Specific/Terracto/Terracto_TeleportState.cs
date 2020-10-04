@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Terracto_TeleportState : TeleportState
+public class Phytobaer_TeleportState : TeleportState
 {
-    private Terracto terracto;
+    private Phytobaer phytobaer;
 
-    public Terracto_TeleportState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, Terracto terracto) : base(entity, stateMachine, animationBoolName)
+    public Phytobaer_TeleportState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, Phytobaer phytobaer) : base(entity, stateMachine, animationBoolName)
     {
-        this.terracto = terracto;
+        this.phytobaer = phytobaer;
     }
 
     public override void DoChecks()
@@ -31,7 +31,7 @@ public class Terracto_TeleportState : TeleportState
         base.LogicUpdate();
         if (isTeleportTimeOver)
         {
-            stateMachine.ChangeState(terracto.idleState);
+            stateMachine.ChangeState(phytobaer.idleState);
         }
     }
 

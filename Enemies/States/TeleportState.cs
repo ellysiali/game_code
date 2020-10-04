@@ -20,6 +20,7 @@ public class TeleportState : State
         base.Enter();
         entity.transform.position = entity.CheckPlayerPosition();
         isTeleportTimeOver = false;
+        entity.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     public override void Exit()

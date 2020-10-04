@@ -17,6 +17,7 @@ public class D_Entity : ScriptableObject
     public float minAggroDistance = 3f;
     public float maxAggroDistance = 4f;
     public float closeRangeActionDistance = 1f;
+    public float farRangeActionDistance = 6f;
     public float groundCheckRadius = 0.3f;
     public float touchDamageWidth = 2f;
     public float touchDamageHeight = 2f;

@@ -35,7 +35,7 @@ public class Phytobaer_StunState : StunState
                 stateMachine.ChangeState(phytobaer.meleeAttackState);
             }
 
-            else if (isPlayerInMinAgroRange)
+            else if (isPlayerInMinAggroRange)
             {
                 stateMachine.ChangeState(phytobaer.chargeState);
             }

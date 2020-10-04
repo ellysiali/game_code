@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackState : State
 {
     protected Transform attackPosition;
-    protected bool isAnimationFinished, isPlayerInMinAgroRange;
+    protected bool isAnimationFinished, isPlayerInMinAggroRange;
     public AttackState(Entity entity, FiniteStateMachine stateMachine, 
                        string animationBoolName, Transform attackPosition) : 
                        base(entity, stateMachine, animationBoolName)
@@ -16,7 +16,7 @@ public class AttackState : State
     public override void DoChecks()
     {
         base.DoChecks();
-        isPlayerInMinAgroRange = entity.CheckEnemyInMinAggroRange();
+        isPlayerInMinAggroRange = entity.CheckEnemyInMinAggroRange();
     }
 
     public override void Enter()

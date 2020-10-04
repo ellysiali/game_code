@@ -37,7 +37,7 @@ public class Slime_StunState : StunState
                 stateMachine.ChangeState(slime.meleeAttackState);
             }
 
-            else if (isPlayerInMinAgroRange)
+            else if (isPlayerInMinAggroRange)
             {
                 stateMachine.ChangeState(slime.chargeState);
             }

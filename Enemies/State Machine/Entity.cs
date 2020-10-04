@@ -23,7 +23,8 @@ public class Entity : MonoBehaviour
     private AttackDetails attackDetails;
     protected bool isStunned, isDead;
     public bool isFriendly;
-    protected Collider2D colliderResults; 
+    protected Collider2D colliderResults;
+    private LayerMask enemyLayerMask;
     #endregion
 
     #region Unity Callback Functions
@@ -39,6 +40,10 @@ public class Entity : MonoBehaviour
         if(isFriendly)
         {
             SetFriendly();
+        }
+        else
+        {
+            SetUnfriendly();
         }
 
         currentHealth = entityData.maxHealth;
@@ -76,8 +81,16 @@ public class Entity : MonoBehaviour
     public virtual void SetFriendly()
     {
         isFriendly = true;
-        gameObject.tag = "Summon";
+        gameObject.tag = "Friendly";
         gameObject.layer = LayerMask.NameToLayer("Friendly");
+        enemyLayerMask = entityData.enemyLayerMask;
+    }
+    public virtual void SetUnfriendly()
+    {
+        isFriendly = false;
+        gameObject.tag = "Enemy";
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
+        enemyLayerMask = entityData.playerLayerMask;
     }
     #endregion
 
@@ -94,63 +107,21 @@ public class Entity : MonoBehaviour
                          entityData.ledgeCheckDistance,
                          entityData.platformLayerMask);
     }
-    public virtual bool CheckEnemyInMinAggroRange()
+    public virtual bool CheckEnemyInMinAggroRange() => Physics2D.OverlapCircle(transform.position, entityData.minAggroDistance, enemyLayerMask);
+    public virtual bool CheckEnemyInMaxAggroRange() => Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, enemyLayerMask);
+    public virtual bool CheckEnemyInCloseRangeAction() => Physics2D.OverlapCircle(transform.position, entityData.closeRangeActionDistance, enemyLayerMask);
+    public virtual bool CheckEnemyInFarRangeAction()
     {
-        if (isFriendly)
-        {
-            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.minAggroDistance, entityData.enemyLayerMask);
-            if (colliderResults)
-            {
-                return Physics2D.OverlapCircle(transform.position, entityData.minAggroDistance, entityData.enemyLayerMask);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return Physics2D.OverlapCircle(transform.position, entityData.minAggroDistance, entityData.playerLayerMask);
+        RaycastHit2D rightResults, leftResults;
+        bool enemyInLeft, enemyInRight;
 
-        }
-    }
-    public virtual bool CheckEnemyInMaxAggroRange()
-    {
-        if (isFriendly)
-        {
-            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.enemyLayerMask);
-            if (colliderResults)
-            {
-                return Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.enemyLayerMask);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.playerLayerMask);
-        }
-    }
-    public virtual bool CheckEnemyInCloseRangeAction()
-    {
-        if (isFriendly)
-        {
-            colliderResults = Physics2D.OverlapCircle(transform.position, entityData.closeRangeActionDistance, entityData.enemyLayerMask);
-            if (colliderResults)
-            {
-                return Physics2D.OverlapCircle(transform.position, entityData.closeRangeActionDistance, entityData.enemyLayerMask);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return Physics2D.OverlapCircle(transform.position, entityData.closeRangeActionDistance, entityData.playerLayerMask);
-        }
+        rightResults = Physics2D.Raycast(transform.position, Vector3.right, entityData.farRangeActionDistance, enemyLayerMask);
+        leftResults = Physics2D.Raycast(transform.position, Vector3.left, entityData.farRangeActionDistance, enemyLayerMask);
+
+        enemyInRight = rightResults && !Physics2D.Raycast(transform.position, Vector3.right, rightResults.point.x - transform.position.x, entityData.platformLayerMask);
+        enemyInLeft = leftResults && !Physics2D.Raycast(transform.position, Vector3.left, transform.position.x - leftResults.point.x, entityData.platformLayerMask);
+
+        return enemyInRight || enemyInLeft;
     }
     public virtual bool CheckGround()
     {
@@ -162,6 +133,10 @@ public class Entity : MonoBehaviour
         if (isFriendly)
         {
             colliderResults = Physics2D.OverlapCircle(transform.position, entityData.maxAggroDistance, entityData.enemyLayerMask);
+            if (colliderResults == null)
+            {
+                return true;
+            }
             return colliderResults.transform.position.x > transform.position.x && facingDirection == 1 || colliderResults.transform.position.x < transform.position.x && facingDirection == -1;
         }
         else
