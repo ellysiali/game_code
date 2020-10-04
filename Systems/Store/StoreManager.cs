@@ -21,6 +21,7 @@ public class StoreManager: MonoBehaviour
     #endregion
 
     #region Other Variables
+    const float MIN_INPUT_VALUE = 0.7f;
     private bool isStoreActive, isBulkBuyingActive, isConfirmationActive, confirmPurchase;
     private int selectedIndex, bulkAmount;
     private float lastInputTime = -100f;
@@ -156,22 +157,22 @@ public class StoreManager: MonoBehaviour
     #endregion
     private void UpdateNormalInput()
     {
-        if (InputHandler.MovementInput == Vector2.right && selectedIndex < itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.x >= MIN_INPUT_VALUE && selectedIndex < itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
         {
             MoveSelectRight();
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput == Vector2.left && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.x <= -MIN_INPUT_VALUE && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
         {
             MoveSelectLeft();
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput == Vector2.down && selectedIndex + 6 <= itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.y <= -MIN_INPUT_VALUE && selectedIndex + 6 <= itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
         {
             MoveSelectDown();
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput == Vector2.up && selectedIndex - 6 >= 0 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.y >= MIN_INPUT_VALUE && selectedIndex - 6 >= 0 && Time.time >= lastInputTime + waitTime)
         {
             MoveSelectUp();
             lastInputTime = Time.time;
@@ -210,12 +211,12 @@ public class StoreManager: MonoBehaviour
     }
     private void UpdateBulkBuyingInput()
     {        
-        if (InputHandler.MovementInput == Vector2.up && (bulkAmount + 1) * GetSelectedItem().price <= gameManager.coinCount && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.y >= MIN_INPUT_VALUE && (bulkAmount + 1) * GetSelectedItem().price <= gameManager.coinCount && Time.time >= lastInputTime + waitTime)
         {
             bulkAmount++;
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput == Vector2.down && bulkAmount > 1 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.y <= -MIN_INPUT_VALUE && bulkAmount > 1 && Time.time >= lastInputTime + waitTime)
         {
             bulkAmount--;
             lastInputTime = Time.time;
@@ -235,12 +236,12 @@ public class StoreManager: MonoBehaviour
     }
     private void UpdateConfirmInput()
     {
-        if (InputHandler.MovementInput == Vector2.right && confirmPurchase && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.x >= MIN_INPUT_VALUE && confirmPurchase && Time.time >= lastInputTime + waitTime)
         {
             confirmPurchase = false;
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput == Vector2.left && !confirmPurchase && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.x <= MIN_INPUT_VALUE && !confirmPurchase && Time.time >= lastInputTime + waitTime)
         {
             confirmPurchase = true;
             lastInputTime = Time.time;

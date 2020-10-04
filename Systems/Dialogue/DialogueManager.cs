@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 public class DialogueManager : MonoBehaviour
 {
     #region Other Variables
+    const float MIN_INPUT_VALUE = 0.7f;
     private int activeIndex, selectedIndex;
     private bool dialogueIsActive, questionIsActive, isStoreActive;
     private string activeLine;
@@ -62,12 +63,12 @@ public class DialogueManager : MonoBehaviour
                     child.gameObject.SetActive(true);
                 }
 
-                if(InputHandler.MovementInput == Vector2.right && selectedIndex < optionHolder.childCount - 1 && Time.time >= lastInputTime + waitTime)
+                if(InputHandler.MovementInput.x >= MIN_INPUT_VALUE && selectedIndex < optionHolder.childCount - 1 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveOptionSelectRight();
                     lastInputTime = Time.time;
                 }
-                else if (InputHandler.MovementInput == Vector2.left && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
+                else if (InputHandler.MovementInput.x <= -MIN_INPUT_VALUE && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveOptionSelectLeft();
                     lastInputTime = Time.time;
