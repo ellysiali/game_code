@@ -14,6 +14,8 @@ public class PlayerInputHandler : MonoBehaviour
     public bool ContinueInput { get; private set; }
     public bool ExitInput { get; private set; }
     public bool InventoryInput { get; private set; }
+    public bool MenuInput { get; private set; }
+
 
     public Vector2 MovementInput { get; private set; }
 
@@ -117,6 +119,15 @@ public class PlayerInputHandler : MonoBehaviour
     public void UseInventoryInput() => InventoryInput = false;
     #endregion
 
+    #region Menu Functions
+    public void OnMenuInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            MenuInput = true;
+        }
+    }
+    #endregion
     #endregion
 
 

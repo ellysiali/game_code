@@ -8,7 +8,7 @@ public class PlayerState
     protected PlayerStateMachine stateMachine;
     protected PlayerData playerData;
     protected float startTime;
-    protected bool isAnimationFinished;
+    protected bool isAnimationFinished, menuInput;
 
     private string animationBoolName;
 
@@ -35,7 +35,10 @@ public class PlayerState
         player.Anim.SetBool(animationBoolName, false);
     }
 
-    public virtual void LogicUpdate() { }
+    public virtual void LogicUpdate() 
+    {
+        menuInput = player.InputHandler.MenuInput;
+    }
 
     public virtual void PhysicsUpdate()
     {

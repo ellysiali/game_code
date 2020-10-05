@@ -19,8 +19,6 @@ public class D_Entity : ScriptableObject
     public float closeRangeActionDistance = 1f;
     public float farRangeActionDistance = 6f;
     public float groundCheckRadius = 0.3f;
-    public float touchDamageWidth = 2f;
-    public float touchDamageHeight = 2f;
     public float heightUntilJump = 1f;
     public float maxPlayerRange = 6f;
     public float minPlayerRange = 1.5f;

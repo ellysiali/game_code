@@ -14,6 +14,10 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit();
     }
+    public void ExitGame()
+    {
+        SceneManager.LoadScene(0);
+    }
 
     #region Button Selection Functions
     public void EnterOptionsMenu()

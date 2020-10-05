@@ -162,6 +162,11 @@ public class Entity : MonoBehaviour
     #region Other Functions
     public virtual void Damage (AttackDetails attackDetails)
     {
+        if (!CheckFacingPlayer())
+        {
+            Flip();
+        }
+
         currentHealth -= attackDetails.damageAmount;
         isStunned = true;
 
