@@ -29,13 +29,13 @@ public class Dummy_DeadState : DeadState
     {
         objectWorkspace = Transform.Instantiate(dummy.head.gameObject);
         objectWorkspace.transform.position = entity.transform.position;
-        vectorWorkspace.Set(Random.Range(0, 5f * dummy.facingDirection), Random.Range(0f, 5f));
+        vectorWorkspace.Set(0, Random.Range(0f, 5f));
         objectWorkspace.GetComponent<Rigidbody2D>().velocity = vectorWorkspace;
         objectWorkspace.transform.rotation = Quaternion.Euler(Vector3.forward * dummy.facingDirection * Random.Range(0f, 60f));
 
         objectWorkspace = Transform.Instantiate(dummy.body.gameObject);
         objectWorkspace.transform.position = entity.transform.position;
-        vectorWorkspace.Set(Random.Range(0, 5f * dummy.facingDirection), Random.Range(5f, 10f));
+        vectorWorkspace.Set(0, Random.Range(5f, 10f));
         objectWorkspace.GetComponent<Rigidbody2D>().velocity = vectorWorkspace;
         objectWorkspace.transform.rotation = Quaternion.Euler(Vector3.forward * dummy.facingDirection * Random.Range(0f, 60f));
 

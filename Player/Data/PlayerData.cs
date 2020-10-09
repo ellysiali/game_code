@@ -7,7 +7,15 @@ public class PlayerData : ScriptableObject
 {
     [Header("Player Stats")]
     public float maxHealth = 100f;
+    public float currentHealth = 100f;
+    public float coinCount = 0f;
     public float attackMultiplier = 1f;
+    public float defenseMultiplier = 1f;
+
+    [Header("Transition Info")]
+    public float startXPosition = 0f;
+    public float startYPosition = -0.772f;
+    public bool flipOnStart = false;
 
     [Header("Move State")]
     public float movementVelocity = 8f;

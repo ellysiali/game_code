@@ -25,9 +25,9 @@ public class DeadState : State
     {
         base.Enter();
         coinDrop = Mathf.RoundToInt(Random.Range(stateData.averageCoinDrops - stateData.coinRange, stateData.averageCoinDrops + stateData.coinRange));
-        goldDrop = (int) (coinDrop / 100);
-        silverDrop = (int) ((coinDrop % 100) / 10);
-        copperDrop = (int) ((coinDrop % 100) % 10);
+        goldDrop = (int) (coinDrop / stateData.gold.GetComponent<Coin>().CheckValue());
+        silverDrop = (int) ((coinDrop % stateData.gold.GetComponent<Coin>().CheckValue()) / stateData.silver.GetComponent<Coin>().CheckValue());
+        copperDrop = (int) ((coinDrop % stateData.gold.GetComponent<Coin>().CheckValue()) % stateData.silver.GetComponent<Coin>().CheckValue());
     }
 
     public override void Exit()

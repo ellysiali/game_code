@@ -14,7 +14,7 @@ public class PlayerInputHandler : MonoBehaviour
     public bool ContinueInput { get; private set; }
     public bool ExitInput { get; private set; }
     public bool InventoryInput { get; private set; }
-    public bool MenuInput { get; private set; }
+    public bool PauseInput { get; private set; }
 
 
     public Vector2 MovementInput { get; private set; }
@@ -119,14 +119,17 @@ public class PlayerInputHandler : MonoBehaviour
     public void UseInventoryInput() => InventoryInput = false;
     #endregion
 
-    #region Menu Functions
-    public void OnMenuInput(InputAction.CallbackContext context)
+    #region Pause Functions
+    public void OnPauseInput(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            MenuInput = true;
+            PauseInput = true;
         }
     }
+    public void UsePauseInput() => PauseInput = false;
+    public void AddPauseInput() => PauseInput = true;
+
     #endregion
     #endregion
 

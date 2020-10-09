@@ -30,11 +30,14 @@ public class PlayerGroundedState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        input = player.InputHandler.MovementInput;
-        jumpInput = player.InputHandler.JumpInput;
-        dashInput = player.InputHandler.DashInput;
-        attackInput = player.InputHandler.AttackInput;
-        inventoryInput = player.InputHandler.InventoryInput;
+        if (!isGamePaused)
+        {
+            input = player.InputHandler.MovementInput;
+            jumpInput = player.InputHandler.JumpInput;
+            dashInput = player.InputHandler.DashInput;
+            attackInput = player.InputHandler.AttackInput;
+            inventoryInput = player.InputHandler.InventoryInput;
+        }
 
         if (attackInput)
         {

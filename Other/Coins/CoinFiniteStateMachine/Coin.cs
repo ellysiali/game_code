@@ -15,7 +15,7 @@ public class Coin : MonoBehaviour
     public Rigidbody2D RB { get; private set; }
     public Animator Anim { get; private set; }
     [SerializeField] private CoinData coinData;
-    public GameManager gameManager;
+    [SerializeField] private PlayerData playerData;
     [SerializeField] private Transform groundCheck;
 
     #endregion
@@ -39,7 +39,6 @@ public class Coin : MonoBehaviour
         Anim = GetComponent<Animator>();
         RB = GetComponent<Rigidbody2D>();
         StateMachine.Initialize(CoinFallState);
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         facingDirection = -1;
     }
@@ -57,7 +56,7 @@ public class Coin : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            gameManager.AddCoins(coinData.value);
+            playerData.coinCount += coinData.value;
             Destroy(gameObject);
         }
     }
@@ -82,6 +81,7 @@ public class Coin : MonoBehaviour
     #region Check Functions
     public bool CheckIfGrounded => Physics2D.OverlapCircle(groundCheck.position, coinData.groundCheckRadius, coinData.PlatformLayerMask);
     public float CheckFacingDirection => facingDirection;
+    public float CheckValue() => coinData.value;
     #endregion
 
     #region Other Functions

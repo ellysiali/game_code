@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,12 +21,12 @@ public class Option : MonoBehaviour
     public void Select()
     {
         isSelected = true;
-        GetComponentInChildren<Text>().color = Color.red;
+        GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
     }
     public void Deselect()
     {
         isSelected = false;
-        GetComponentInChildren<Text>().color = Color.black;
+        GetComponentInChildren<TextMeshProUGUI>().color = Color.black;
     }
     public void Activate()
     {

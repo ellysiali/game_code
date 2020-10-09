@@ -8,8 +8,9 @@ public class PlayerState
     protected PlayerStateMachine stateMachine;
     protected PlayerData playerData;
     protected float startTime;
-    protected bool isAnimationFinished, menuInput;
+    protected bool isAnimationFinished, isGamePaused;
 
+    private bool pauseInput;
     private string animationBoolName;
 
     public PlayerState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animationBoolName)
@@ -28,6 +29,7 @@ public class PlayerState
         startTime = Time.time;
         player.Anim.SetBool(animationBoolName, true);
         isAnimationFinished = false;
+        isGamePaused = false;
     }
 
     public virtual void Exit()
@@ -37,7 +39,24 @@ public class PlayerState
 
     public virtual void LogicUpdate() 
     {
-        menuInput = player.InputHandler.MenuInput;
+        pauseInput = player.InputHandler.PauseInput;
+
+        if (pauseInput)
+        {
+            player.InputHandler.UsePauseInput();
+            if (Time.timeScale == 1.0f)
+            {
+                player.menu.SetActive(true);
+                Time.timeScale = 0.0f;
+                isGamePaused = true;
+            }
+            else
+            {
+                player.menu.SetActive(false);
+                Time.timeScale = 1.0f;
+                isGamePaused = false;
+            }
+        }
     }
 
     public virtual void PhysicsUpdate()

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,8 @@ public class StoreManager: MonoBehaviour
     [SerializeField] private Transform confirmation;
     [SerializeField] public PlayerInputHandler InputHandler;
     [SerializeField] private Inventory playerInventory;
+    [SerializeField] PlayerData playerData;
     public DialogueManager dialogueManager;
-    public GameManager gameManager;
     public InventoryManager inventoryManager;
     #endregion
 
@@ -36,7 +37,6 @@ public class StoreManager: MonoBehaviour
         selectedIndex = 0;
         store.gameObject.SetActive(false);
         dialogueManager = GameObject.Find("DialogueManager").GetComponent<DialogueManager>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         inventoryManager = GameObject.Find("InventoryManager").GetComponent<InventoryManager>();
     }
     private void Update()
@@ -48,14 +48,14 @@ public class StoreManager: MonoBehaviour
             {
                 UpdateBulkBuyingInput();
                 bulkDetails.gameObject.SetActive(true);
-                bulkDetails.Find("Bulk Amount").GetComponent<Text>().text = bulkAmount + "   (" + bulkAmount * GetSelectedItem().price + " BC)";
-                bulkDetails.Find("Purchase").GetComponent<Text>().text = "Purchase " + GetSelectedItem().name + "?";
+                bulkDetails.Find("Bulk Amount").GetComponent<TextMeshProUGUI>().text = bulkAmount + "   (" + bulkAmount * GetSelectedItem().price + " BC)";
+                bulkDetails.Find("Purchase").GetComponent<TextMeshProUGUI>().text = "Purchase " + GetSelectedItem().name + "?";
             }
             else if (isConfirmationActive)
             {
                 UpdateConfirmInput();
                 confirmation.gameObject.SetActive(true);
-                confirmation.Find("Purchase").GetComponent<Text>().text = "Purchase " + GetSelectedItem().name + "?";
+                confirmation.Find("Purchase").GetComponent<TextMeshProUGUI>().text = "Purchase " + GetSelectedItem().name + "?";
             }
             else
             {
@@ -78,7 +78,7 @@ public class StoreManager: MonoBehaviour
         {
             GameObject workspace = Instantiate(itemSlot, itemContainer);
             workspace.GetComponentInChildren<ItemSlot>().item = item.item;
-            workspace.GetComponentInChildren<Text>().text = item.item.price + " BC";
+            workspace.GetComponentInChildren<TextMeshProUGUI>().text = item.item.price + " BC";
             workspace.transform.Find("Sprite").GetComponent<Image>().sprite = item.item.image;
             workspace.transform.Find("Sprite").GetComponent<Image>().SetNativeSize();
             workspace.transform.Find("Select").gameObject.SetActive(false);
@@ -97,12 +97,12 @@ public class StoreManager: MonoBehaviour
     }
     private void UpdateItemDetails()
     {
-        itemDetails.Find("Item Name").GetComponent<Text>().text = GetSelectedItem().name;
-        itemDetails.Find("Item Description").GetComponent<Text>().text = GetSelectedItem().description;
+        itemDetails.Find("Item Name").GetComponent<TextMeshProUGUI>().text = GetSelectedItem().name;
+        itemDetails.Find("Item Description").GetComponent<TextMeshProUGUI>().text = GetSelectedItem().description;
         if (GetSelectedItem().type == ItemType.Consumable)
         {
             itemDetails.Find("Item Amount").gameObject.SetActive(true);
-            itemDetails.Find("Item Amount").GetComponent<Text>().text = "Inventory: (" + playerInventory.CheckAmount(GetSelectedItem()) + ")";
+            itemDetails.Find("Item Amount").GetComponent<TextMeshProUGUI>().text = "Inventory: (" + playerInventory.CheckAmount(GetSelectedItem()) + ")";
         }
         else
         {
@@ -112,7 +112,7 @@ public class StoreManager: MonoBehaviour
     private void Purchase()
     {
         playerInventory.AddItem(GetSelectedItem(), 1);
-        gameManager.RemoveCoins(GetSelectedItem().price);
+        playerData.coinCount -= GetSelectedItem().price;
         MoveSelectLeft();
         storeData.inventory.RemoveItem(itemContainer.GetChild(selectedIndex + 1).GetComponentInChildren<ItemSlot>().item, 1);
         itemContainer.GetChild(selectedIndex + 1).GetComponent<ItemSlot>().Remove();
@@ -121,7 +121,7 @@ public class StoreManager: MonoBehaviour
     private void PurchaseInBulk(int amount)
     {
         playerInventory.AddItem(GetSelectedItem(), amount);
-        gameManager.RemoveCoins(amount * GetSelectedItem().price);
+        playerData.coinCount -= amount * GetSelectedItem().price;
         isBulkBuyingActive = false;
         dialogueManager.StartDialogue(storeData.purchaseDialogue);
     }
@@ -182,24 +182,27 @@ public class StoreManager: MonoBehaviour
             InputHandler.UseContinueInput();
             lastInputTime = Time.time;
 
-            if (GetSelectedItem().price <= gameManager.coinCount)
+            if (dialogueManager.CheckTypingDone())
             {
-                if (GetSelectedItem().type == ItemType.Consumable) 
-                { 
-                    isBulkBuyingActive = true; 
-                    bulkAmount = 1; 
-                }
-
-                else 
+                if (GetSelectedItem().price <= playerData.coinCount)
                 {
-                    isConfirmationActive = true;
-                    confirmPurchase = true;
+                    if (GetSelectedItem().type == ItemType.Consumable)
+                    {
+                        isBulkBuyingActive = true;
+                        bulkAmount = 1;
+                    }
 
+                    else
+                    {
+                        isConfirmationActive = true;
+                        confirmPurchase = true;
+
+                    }
                 }
-            }
-            else
-            {
-                dialogueManager.StartDialogue(storeData.noMoneyDialogue);
+                else
+                {
+                    dialogueManager.StartDialogue(storeData.noMoneyDialogue);
+                }
             }
         }
         else if (InputHandler.ExitInput && Time.time >= lastInputTime + waitTime)
@@ -211,7 +214,7 @@ public class StoreManager: MonoBehaviour
     }
     private void UpdateBulkBuyingInput()
     {        
-        if (InputHandler.MovementInput.y >= MIN_INPUT_VALUE && (bulkAmount + 1) * GetSelectedItem().price <= gameManager.coinCount && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.y >= MIN_INPUT_VALUE && (bulkAmount + 1) * GetSelectedItem().price <= playerData.coinCount && Time.time >= lastInputTime + waitTime)
         {
             bulkAmount++;
             lastInputTime = Time.time;

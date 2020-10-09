@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +40,7 @@ public class InventoryManager : MonoBehaviour
         {
             UpdateConfirmInput();
             confirmation.gameObject.SetActive(true);
-            confirmation.Find("Purchase").GetComponent<Text>().text = "Use " + GetSelectedItem().name + "?";
+            confirmation.Find("Purchase").GetComponent<TextMeshProUGUI>().text = "Use " + GetSelectedItem().name + "?";
         }
         else
         {
@@ -79,13 +80,13 @@ public class InventoryManager : MonoBehaviour
     {
         if (itemContainer.childCount > 0)
         {
-            itemDetails.Find("Item Name").GetComponent<Text>().text = GetSelectedItem().name;
-            itemDetails.Find("Item Description").GetComponent<Text>().text = GetSelectedItem().description;
+            itemDetails.Find("Item Name").GetComponent<TextMeshProUGUI>().text = GetSelectedItem().name;
+            itemDetails.Find("Item Description").GetComponent<TextMeshProUGUI>().text = GetSelectedItem().description;
 
             if (GetSelectedItem().type == ItemType.Consumable)
             {
                 itemDetails.Find("Item Amount").gameObject.SetActive(true);
-                itemDetails.Find("Item Amount").GetComponent<Text>().text = "Amount: (" + inventory.CheckAmount(GetSelectedItem()) + ")";
+                itemDetails.Find("Item Amount").GetComponent<TextMeshProUGUI>().text = "Amount: (" + inventory.CheckAmount(GetSelectedItem()) + ")";
             }
             else
             {
@@ -94,8 +95,8 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            itemDetails.Find("Item Name").GetComponent<Text>().text = "";
-            itemDetails.Find("Item Description").GetComponent<Text>().text = "";
+            itemDetails.Find("Item Name").GetComponent<TextMeshProUGUI>().text = "";
+            itemDetails.Find("Item Description").GetComponent<TextMeshProUGUI>().text = "";
             itemDetails.Find("Item Amount").gameObject.SetActive(false);
         }
     }
@@ -226,13 +227,13 @@ public class InventoryManager : MonoBehaviour
 
         if (confirmUse)
         {
-            confirmation.Find("Yes").GetComponent<Text>().color = Color.yellow;
-            confirmation.Find("No").GetComponent<Text>().color = Color.white;
+            confirmation.Find("Yes").GetComponent<TextMeshProUGUI>().color = Color.yellow;
+            confirmation.Find("No").GetComponent<TextMeshProUGUI>().color = Color.white;
         }
         else
         {
-            confirmation.Find("Yes").GetComponent<Text>().color = Color.white;
-            confirmation.Find("No").GetComponent<Text>().color = Color.yellow;
+            confirmation.Find("Yes").GetComponent<TextMeshProUGUI>().color = Color.white;
+            confirmation.Find("No").GetComponent<TextMeshProUGUI>().color = Color.yellow;
         }
     }
     #endregion

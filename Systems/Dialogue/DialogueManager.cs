@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -171,7 +172,7 @@ public class DialogueManager : MonoBehaviour
         {
             OptionObject workingOption = question.options[i];
             GameObject workspace = Instantiate(option, optionHolder);
-            workspace.GetComponentInChildren<Text>().text = workingOption.option;
+            workspace.GetComponentInChildren<TextMeshProUGUI>().text = workingOption.option;
             workspace.GetComponent<Option>().action = workingOption.action;
             workspace.SetActive(false);
         }
@@ -190,16 +191,16 @@ public class DialogueManager : MonoBehaviour
     public void StopTyping()
     {
         StopAllCoroutines();
-        text.GetComponent<Text>().text = activeLine;
+        text.GetComponent<TextMeshProUGUI>().text = activeLine;
     }
-    public bool CheckTypingDone() => text.GetComponent<Text>().text == activeLine;
+    public bool CheckTypingDone() => text.GetComponent<TextMeshProUGUI>().text == activeLine;
     public bool CheckIfDialogueActive() => dialogueIsActive;
     public IEnumerator TypeText(string input)
     {
-        text.GetComponent<Text>().text = "";
+        text.GetComponent<TextMeshProUGUI>().text = "";
         for (int i = 0; i < input.Length; i++)
         {
-            text.GetComponent<Text>().text += input[i];
+            text.GetComponent<TextMeshProUGUI>().text += input[i];
             yield return new WaitForSeconds(0.02f);
         }
     }

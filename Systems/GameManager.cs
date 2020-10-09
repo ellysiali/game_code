@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,11 +14,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] public Image healthBar;
     [SerializeField] public Image yellowHealthBar;
     [SerializeField] public Player playerScript;
-    [SerializeField] private Text coinText;
+    [SerializeField] private TextMeshProUGUI coinText;
 
-    private CinemachineVirtualCamera CVC;
     private float respawnTimeStart;
-    public float coinCount { get; private set; }
     private bool toRespawn;
 
     /**************************************************************************
@@ -27,8 +26,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerScript = FindObjectOfType<Player>();
-        coinCount = 0;
-        //CVC = GameObject.Find("Player Camera").GetComponent<CinemachineVirtualCamera>();
+        healthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
+        yellowHealthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
     }
 
     /**************************************************************************
@@ -37,7 +36,7 @@ public class GameManager : MonoBehaviour
     *************************************************************************/
     void Update()
     {
-        coinText.text = "" + coinCount;
+        coinText.text = "" + playerData.coinCount;
         UpdateHealthBar();
         CheckRespawn();
     }
@@ -48,11 +47,11 @@ public class GameManager : MonoBehaviour
     *************************************************************************/
     void UpdateHealthBar()
     {
-        if (healthBar.fillAmount < playerScript.currentHealth / playerData.maxHealth)
+        if (healthBar.fillAmount < playerData.currentHealth / playerData.maxHealth)
         {
-            if (healthBar.fillAmount + 0.01f > (float)playerScript.currentHealth / playerData.maxHealth)
+            if (healthBar.fillAmount + 0.01f > (float)playerData.currentHealth / playerData.maxHealth)
             {
-                healthBar.fillAmount = (float)playerScript.currentHealth / playerData.maxHealth;
+                healthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
             }
             else
             {
@@ -61,7 +60,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            healthBar.fillAmount = (float)playerScript.currentHealth / playerData.maxHealth;
+            healthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
         }
         if (yellowHealthBar.fillAmount > healthBar.fillAmount)
         {
@@ -88,24 +87,11 @@ public class GameManager : MonoBehaviour
     {
         if (Time.time >= respawnTimeStart + respawnTime && toRespawn)
         {
-            playerScript.ResetStats();
+            playerScript.ResetHealth();
             player.transform.position = respawnPoint.position;
             player.SetActive(true);
-            //var playerTemp = Instantiate(player, respawnPoint);
-            //CVC.m_Follow = playerTemp.transform;
-            //playerScript = playerTemp.GetComponent<Player>();
             toRespawn = false;
             yellowHealthBar.fillAmount = 1f;
         }
-    }
-
-    public void AddCoins(float numberOfCoins)
-    {
-        coinCount += numberOfCoins;
-    }
-
-    public void RemoveCoins(float numberOfCoins)
-    {
-        coinCount -= numberOfCoins;
     }
 }
