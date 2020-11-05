@@ -12,7 +12,7 @@ public class DialogueManager : MonoBehaviour
 {
     #region Other Variables
     const float MIN_INPUT_VALUE = 0.7f;
-    private int activeIndex, selectedIndex;
+    private int activeDialogueLine, selectedOption;
     private bool dialogueIsActive, questionIsActive, isStoreActive;
     private string activeLine;
     private Dialogue dialogue;
@@ -35,7 +35,6 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
         back.gameObject.SetActive(false);
-        activeIndex = selectedIndex = 0;
         dialogueIsActive = false;
         questionIsActive = false;
         storeManager = GameObject.Find("StoreManager").GetComponent<StoreManager>();
@@ -64,12 +63,12 @@ public class DialogueManager : MonoBehaviour
                     child.gameObject.SetActive(true);
                 }
 
-                if(InputHandler.MovementInput.x >= MIN_INPUT_VALUE && selectedIndex < optionHolder.childCount - 1 && Time.time >= lastInputTime + waitTime)
+                if(InputHandler.MovementInput.x >= MIN_INPUT_VALUE && selectedOption < optionHolder.childCount - 1 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveOptionSelectRight();
                     lastInputTime = Time.time;
                 }
-                else if (InputHandler.MovementInput.x <= -MIN_INPUT_VALUE && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
+                else if (InputHandler.MovementInput.x <= -MIN_INPUT_VALUE && selectedOption > 0 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveOptionSelectLeft();
                     lastInputTime = Time.time;
@@ -79,7 +78,7 @@ public class DialogueManager : MonoBehaviour
                     InputHandler.UseContinueInput();
                     questionIsActive = false;
                     RemoveOptions();
-                    optionHolder.GetChild(selectedIndex).GetComponent<Option>().Activate();
+                    optionHolder.GetChild(selectedOption).GetComponent<Option>().Activate();
                 }
                 else if (InputHandler.ExitInput)
                 {
@@ -89,7 +88,7 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
-        else if (InputHandler.ContinueInput && activeIndex != 0 && dialogueIsActive && !storeManager.CheckIfStoreActive())
+        else if (InputHandler.ContinueInput && activeDialogueLine != 0 && dialogueIsActive && !storeManager.CheckIfStoreActive())
         {
             InputHandler.UseContinueInput();
             StopAllCoroutines();
@@ -106,7 +105,7 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue)
     {
         InputHandler.SetActionMapToInteractions();
-        activeIndex = 0;
+        activeDialogueLine = selectedOption = 0;
         this.dialogue = dialogue;
         back.gameObject.SetActive(true);
         dialogueIsActive = true;
@@ -114,7 +113,7 @@ public class DialogueManager : MonoBehaviour
     }
     public void ContinueDialogue()
     {
-        if (dialogue.lines.Length <= activeIndex)
+        if (dialogue.lines.Length <= activeDialogueLine)
         {
             if (dialogue.question != null)
             {
@@ -129,14 +128,13 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            UpdateDialogueLine(dialogue.lines[activeIndex]);
-            activeIndex++;
+            UpdateDialogueLine(dialogue.lines[activeDialogueLine]);
+            activeDialogueLine++;
         }
     }
     public void ExitDialogue()
     {
         back.gameObject.SetActive(false);
-        activeIndex = selectedIndex = 0;
         dialogueIsActive = false;
         questionIsActive = false;
         activeLine = "";
@@ -156,15 +154,15 @@ public class DialogueManager : MonoBehaviour
     #region Question/Option Functions
     public void MoveOptionSelectRight()
     {
-        optionHolder.GetChild(selectedIndex).GetComponent<Option>().Deselect();
-        selectedIndex++;
-        optionHolder.GetChild(selectedIndex).GetComponent<Option>().Select();
+        optionHolder.GetChild(selectedOption).GetComponent<Option>().Deselect();
+        selectedOption++;
+        optionHolder.GetChild(selectedOption).GetComponent<Option>().Select();
     }
     public void MoveOptionSelectLeft()
     {
-        optionHolder.GetChild(selectedIndex).GetComponent<Option>().Deselect();
-        selectedIndex--;
-        optionHolder.GetChild(selectedIndex).GetComponent<Option>().Select();
+        optionHolder.GetChild(selectedOption).GetComponent<Option>().Deselect();
+        selectedOption--;
+        optionHolder.GetChild(selectedOption).GetComponent<Option>().Select();
     }
     public void InitializeOptions(Question question)
     {

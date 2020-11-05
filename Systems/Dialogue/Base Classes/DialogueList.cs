@@ -6,26 +6,6 @@ using UnityEngine;
 
 public class DialogueList : ScriptableObject
 {
-    [SerializeField] public Dialogue[] dialogues;
+    public Dialogue[] dialogues;
     public int activeIndex = 0;
-
-    public Dialogue GetActiveDialogue()
-    {
-        return dialogues[activeIndex];
-    }
-
-    public void IncrementActiveIndex()
-    {
-        activeIndex++;
-    }
-
-    public void SetActiveIndex(int newIndex)
-    {
-        activeIndex = newIndex;
-    }
-
-    public bool CheckEndofList()
-    {
-        return activeIndex == dialogues.Length - 1;
-    }
 }

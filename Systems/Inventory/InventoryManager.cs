@@ -19,7 +19,7 @@ public class InventoryManager : MonoBehaviour
     #endregion
 
     #region Other Variables
-    const float MIN_INPUT_VALUE = 0.7f;
+    const float MinInputValue = 0.7f;
     private bool isInventoryActive, isConfirmationActive, confirmUse;
     private int selectedIndex;
     private float lastInputTime = -100f;
@@ -137,22 +137,22 @@ public class InventoryManager : MonoBehaviour
             UpdateItemDetails();
             if (itemContainer.childCount > 0)
             {
-                if (InputHandler.MovementInput.x >= MIN_INPUT_VALUE && selectedIndex < itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
+                if (InputHandler.MovementInput.x >= MinInputValue && selectedIndex < itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveSelectRight();
                     lastInputTime = Time.time;
                 }
-                else if (InputHandler.MovementInput.x <= -MIN_INPUT_VALUE && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
+                else if (InputHandler.MovementInput.x <= -MinInputValue && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveSelectLeft();
                     lastInputTime = Time.time;
                 }
-                else if (InputHandler.MovementInput.y <= -MIN_INPUT_VALUE && selectedIndex + 3 <= itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
+                else if (InputHandler.MovementInput.y <= -MinInputValue && selectedIndex + 3 <= itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveSelectDown();
                     lastInputTime = Time.time;
                 }
-                else if (InputHandler.MovementInput.y >= MIN_INPUT_VALUE && selectedIndex - 3 >= 0 && Time.time >= lastInputTime + waitTime)
+                else if (InputHandler.MovementInput.y >= MinInputValue && selectedIndex - 3 >= 0 && Time.time >= lastInputTime + waitTime)
                 {
                     MoveSelectUp();
                     lastInputTime = Time.time;
@@ -182,12 +182,12 @@ public class InventoryManager : MonoBehaviour
     }
     private void UpdateConfirmInput()
     {
-        if (InputHandler.MovementInput.x >= MIN_INPUT_VALUE && confirmUse && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.x >= MinInputValue && confirmUse && Time.time >= lastInputTime + waitTime)
         {
             confirmUse = false;
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput.x <= -MIN_INPUT_VALUE && !confirmUse && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.x <= -MinInputValue && !confirmUse && Time.time >= lastInputTime + waitTime)
         {
             confirmUse = true;
             lastInputTime = Time.time;

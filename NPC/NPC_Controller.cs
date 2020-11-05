@@ -12,7 +12,6 @@ public class NPC_Controller : MonoBehaviour
     public void Start()
     {
         dialogueManager = DialogueManager.GetComponent<DialogueManager>();
-        dialogueList.SetActiveIndex(0);
     }
 
     public void Update()
@@ -21,12 +20,24 @@ public class NPC_Controller : MonoBehaviour
 
     public void ActivateDialogue()
     {
-        dialogueManager.StartDialogue(dialogueList.GetActiveDialogue());
-        if (!dialogueList.CheckEndofList())
+        Debug.Log(dialogueList.activeIndex);
+        dialogueManager.StartDialogue(GetActiveDialogue());
+        if (!CheckEndofList())
         {
-            dialogueList.IncrementActiveIndex();
+            dialogueList.activeIndex++;
         }
     }
-
+    public void SetActiveIndex(int newIndex)
+    {
+        dialogueList.activeIndex = newIndex;
+    }
+    private Dialogue GetActiveDialogue()
+    {
+        return dialogueList.dialogues[dialogueList.activeIndex];
+    }
+    private bool CheckEndofList()
+    {
+        return dialogueList.activeIndex == dialogueList.dialogues.Length - 1;
+    }
     public bool CheckIfDialogueActive() => dialogueManager.CheckIfDialogueActive();
 }
