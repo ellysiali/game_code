@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private GameObject player;
-    [SerializeField] private PlayerData playerData;
     [SerializeField] private float respawnTime;
     [SerializeField] public Image healthBar;
     [SerializeField] public Image yellowHealthBar;
@@ -26,8 +25,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerScript = FindObjectOfType<Player>();
-        healthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
-        yellowHealthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
+        healthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
+        yellowHealthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
     }
 
     /**************************************************************************
@@ -36,7 +35,7 @@ public class GameManager : MonoBehaviour
     *************************************************************************/
     void Update()
     {
-        coinText.text = "" + playerData.coinCount;
+        coinText.text = "" + GameStatus.GetInstance().coinCount;
         UpdateHealthBar();
         CheckRespawn();
     }
@@ -47,11 +46,11 @@ public class GameManager : MonoBehaviour
     *************************************************************************/
     void UpdateHealthBar()
     {
-        if (healthBar.fillAmount < playerData.currentHealth / playerData.maxHealth)
+        if (healthBar.fillAmount < GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth)
         {
-            if (healthBar.fillAmount + 0.01f > (float)playerData.currentHealth / playerData.maxHealth)
+            if (healthBar.fillAmount + 0.01f > GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth)
             {
-                healthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
+                healthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
             }
             else
             {
@@ -60,7 +59,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            healthBar.fillAmount = (float)playerData.currentHealth / playerData.maxHealth;
+            healthBar.fillAmount = (float)GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
         }
         if (yellowHealthBar.fillAmount > healthBar.fillAmount)
         {

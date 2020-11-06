@@ -6,15 +6,10 @@ using UnityEngine.EventSystems;
 public class MainMenu : MonoBehaviour
 {
     public GameObject optionsEnterSelectedButton, optionsExitSelectedButton, controlsEnterSelectedButton, controlsExitSelectedButton, levelLoader;
-    [SerializeField] private PlayerData playerData;
     public void PlayGame()
     {
         levelLoader.GetComponent<LevelLoader>().LoadNextLevel();
-        playerData.currentHealth = playerData.maxHealth;
-        playerData.startXPosition = 0f;
-        playerData.startYPosition = -0.74f;
-        playerData.flipOnStart = false;
-        playerData.coinCount = 0f;
+        GameStatus.GetInstance().spawnPosition = new Vector2(0f,-0.74f);
     }
     public void QuitGame()
     {

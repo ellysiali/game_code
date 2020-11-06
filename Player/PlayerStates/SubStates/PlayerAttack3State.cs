@@ -38,7 +38,7 @@ public class PlayerAttack3State : PlayerAbilityState
         base.Enter();
         player.SetVelocityX(0f);
 
-        attackDetails.damageAmount = playerData.attack3Damage * playerData.attackMultiplier;
+        attackDetails.damageAmount = playerData.attack3Damage * GameStatus.GetInstance().attackMultiplier;
         attackDetails.position = player.transform.position;
         attackDetails.knockbackX = playerData.attack3KnockbackX;
         attackDetails.knockbackY = playerData.attack3KnockbackY;

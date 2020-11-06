@@ -56,7 +56,7 @@ public class Coin : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            playerData.coinCount += coinData.value;
+            GameStatus.GetInstance().coinCount += coinData.value;
             Destroy(gameObject);
         }
     }

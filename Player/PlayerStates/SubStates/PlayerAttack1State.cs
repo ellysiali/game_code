@@ -36,7 +36,7 @@ public class PlayerAttack1State : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
-        attackDetails.damageAmount = playerData.attack1Damage * playerData.attackMultiplier;
+        attackDetails.damageAmount = playerData.attack1Damage * GameStatus.GetInstance().attackMultiplier;
         attackDetails.position = player.transform.position;
         attackDetails.knockbackX = playerData.attack1KnockbackX;
         attackDetails.knockbackY = playerData.attack1KnockbackY;

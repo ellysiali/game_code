@@ -45,7 +45,6 @@ public class Player : MonoBehaviour
     #region Other Variables
     public Vector2 currentVelocity { get; private set; }
     private Vector2 workspace;
-    public Inventory inventory;
     public bool isInvulnerable, isInDialogueRange;
     public int facingDirection, lastDamageDirection;
     public float lastDash = -100f, lastComboAttack = -100f, lastTimeDamaged = -100f;
@@ -83,9 +82,8 @@ public class Player : MonoBehaviour
         facingDirection = 1;
         InputHandler.SetActionMapToGameplay();
 
-        workspace.Set(playerData.startXPosition, playerData.startYPosition);
-        RB.position = workspace;
-        if (playerData.flipOnStart)
+        RB.position = GameStatus.GetInstance().spawnPosition;
+        if (GameStatus.GetInstance().flipOnStart)
         {
             Flip();
         }
@@ -168,7 +166,6 @@ public class Player : MonoBehaviour
     }
     public bool CheckIfInStore() => storeManager.CheckIfStoreActive();
     public bool CheckIfInInventory() => inventoryManager.CheckIfInventoryActive();
-    public bool CheckIfFullHealth() => playerData.currentHealth == playerData.maxHealth;
     #endregion
 
     #region Other Functions
@@ -183,7 +180,7 @@ public class Player : MonoBehaviour
     {
         if (!isInvulnerable)
         {
-            playerData.currentHealth -= attackDetails.damageAmount * playerData.defenseMultiplier;
+            GameStatus.GetInstance().currentHealth -= attackDetails.damageAmount * GameStatus.GetInstance().defenseMultiplier;
             lastDamageDirection = attackDetails.position.x > transform.position.x ? -1 : 1;
             if (lastDamageDirection == facingDirection)
             {
@@ -193,7 +190,7 @@ public class Player : MonoBehaviour
             SetVelocityX(-facingDirection * attackDetails.knockbackX);
             SetVelocityY(-facingDirection * attackDetails.knockbackY);
 
-            if (playerData.currentHealth <= 0)
+            if (GameStatus.GetInstance().currentHealth <= 0)
             {
                 StateMachine.ChangeState(DeadState);
             }
@@ -206,16 +203,16 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public virtual void ResetHealth() => playerData.currentHealth = playerData.maxHealth;
+    public virtual void ResetHealth() => GameStatus.GetInstance().currentHealth = GameStatus.GetInstance().maxHealth;
     public virtual void AddHealth(float value)
     {
-        if (playerData.currentHealth + value <= playerData.maxHealth)
+        if (GameStatus.GetInstance().currentHealth + value <= GameStatus.GetInstance().maxHealth)
         {
-            playerData.currentHealth += value;
+            GameStatus.GetInstance().currentHealth += value;
         }
         else
         {
-            playerData.currentHealth = playerData.maxHealth;
+            GameStatus.GetInstance().currentHealth = GameStatus.GetInstance().maxHealth;
         }
     }
     public virtual void OnDrawGizmos()

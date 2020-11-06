@@ -9,6 +9,7 @@ public class LevelTransition : MonoBehaviour
     [SerializeField] private LevelLoader levelLoader;
     public float xPosition, yPosition;
     public int sceneIndex;
+    private Vector2 workspace;
     private Player player;
 
     private void Start()
@@ -20,15 +21,15 @@ public class LevelTransition : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            playerData.startXPosition = xPosition;
-            playerData.startYPosition = yPosition;
+            workspace.Set(xPosition, yPosition);
+            GameStatus.GetInstance().spawnPosition = workspace;
             if (player.facingDirection == -1)
             {
-                playerData.flipOnStart = true;
+                GameStatus.GetInstance().flipOnStart = true;
             }
             else
             {
-                playerData.flipOnStart = false;
+                GameStatus.GetInstance().flipOnStart = false;
             }
             levelLoader.GetComponent<LevelLoader>().LoadLevel(sceneIndex);
         }

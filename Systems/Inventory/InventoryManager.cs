@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class InventoryManager : MonoBehaviour
 {
     #region Components
+    [SerializeField] private ItemDatabase database;
     [SerializeField] private Transform inventoryUI;
-    [SerializeField] private Inventory inventory;
     [SerializeField] private GameObject inventoryItemSlot;
     [SerializeField] private Transform itemContainer;
     [SerializeField] private Transform itemDetails;
@@ -50,7 +50,7 @@ public class InventoryManager : MonoBehaviour
     }
     #endregion
 
-    #region Main Store Functions
+    #region Main Inventory Functions
     public virtual void ActivateInventory()
     {
         selectedIndex = 0;
@@ -58,11 +58,11 @@ public class InventoryManager : MonoBehaviour
         InputHandler.SetActionMapToInteractions();
         isInventoryActive = confirmUse = true;
 
-        foreach (InventorySlot item in inventory.itemList)
+        foreach (InventorySlot item in GameStatus.GetInstance().playerInventory.itemList)
         {
             GameObject workspace = Instantiate(inventoryItemSlot, itemContainer);
-            workspace.GetComponentInChildren<InventoryItemSlot>().item = item.item;
-            workspace.transform.Find("Sprite").GetComponent<Image>().sprite = item.item.image;
+            workspace.GetComponentInChildren<InventoryItemSlot>().item = database.items[item.itemID];
+            workspace.transform.Find("Sprite").GetComponent<Image>().sprite = database.items[item.itemID].image;
             workspace.transform.Find("Sprite").GetComponent<Image>().SetNativeSize();
             workspace.transform.Find("Frame").gameObject.GetComponent<Image>().color = Color.white;
         }
@@ -86,7 +86,8 @@ public class InventoryManager : MonoBehaviour
             if (GetSelectedItem().type == ItemType.Consumable)
             {
                 itemDetails.Find("Item Amount").gameObject.SetActive(true);
-                itemDetails.Find("Item Amount").GetComponent<TextMeshProUGUI>().text = "Amount: (" + inventory.CheckAmount(GetSelectedItem()) + ")";
+                itemDetails.Find("Item Amount").GetComponent<TextMeshProUGUI>().text = 
+                    "Amount: (" + GameStatus.GetInstance().playerInventory.CheckAmount(database.items.IndexOf(GetSelectedItem())) + ")";
             }
             else
             {
@@ -160,7 +161,8 @@ public class InventoryManager : MonoBehaviour
                 else if (InputHandler.ContinueInput)
                 {
                     InputHandler.UseContinueInput();
-                    if (Time.time >= lastInputTime + waitTime && GetSelectedItem().type == ItemType.Consumable && !player.CheckIfFullHealth())
+                    if (Time.time >= lastInputTime + waitTime && GetSelectedItem().type == ItemType.Consumable && 
+                        GameStatus.GetInstance().currentHealth <  GameStatus.GetInstance().maxHealth)
                     {
                         isConfirmationActive = true;
                     }
@@ -200,8 +202,8 @@ public class InventoryManager : MonoBehaviour
             {
                 Consumable consumable = (Consumable)GetSelectedItem();
                 player.AddHealth(consumable.healValue);
-                inventory.RemoveItem(GetSelectedItem(), 1);
-                if (inventory.CheckAmount(GetSelectedItem()) == 0)
+                GameStatus.GetInstance().playerInventory.RemoveItem(database.items.IndexOf(GetSelectedItem()), 1);
+                if (GameStatus.GetInstance().playerInventory.CheckAmount(database.items.IndexOf(GetSelectedItem())) == 0)
                 {
                     if (selectedIndex == 0) { GameObject.Destroy(itemContainer.GetChild(selectedIndex).gameObject); }
                     else

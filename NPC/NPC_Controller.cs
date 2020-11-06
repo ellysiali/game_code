@@ -20,7 +20,6 @@ public class NPC_Controller : MonoBehaviour
 
     public void ActivateDialogue()
     {
-        Debug.Log(dialogueList.activeIndex);
         dialogueManager.StartDialogue(GetActiveDialogue());
         if (!CheckEndofList())
         {

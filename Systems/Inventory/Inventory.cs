@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu (fileName = "newInventory", menuName = "Inventory")]
-public class Inventory : ScriptableObject
+public class Inventory
 {
-    public List<InventorySlot> itemList = new List<InventorySlot>();
-    public void AddItem(Item item, int amount)
+    public List<InventorySlot> itemList;
+    public Inventory()
+    {
+        itemList = new List<InventorySlot>();
+    }
+    public void AddItem(int itemID, int amount)
     {
         bool itemFound = false;
         foreach (InventorySlot slot in itemList)
         {
-            if (item.name == slot.item.name)
+            if (itemID == slot.itemID)
             {
                 itemFound = true;
                 slot.AddAmount(amount);
@@ -19,15 +22,15 @@ public class Inventory : ScriptableObject
         }
         if (!itemFound)
         {
-            itemList.Add(new InventorySlot(item, amount));
+            itemList.Add(new InventorySlot(itemID, amount));
         }
     }
-    public void RemoveItem(Item item, int amount)
+    public void RemoveItem(int itemID, int amount)
     {
         int selectedIndex = 0;
         for (int i = 0; i < itemList.Count; i++)
         {
-            if (itemList[i].item.name == item.name)
+            if (itemList[i].itemID == itemID)
             {
                 itemList[i].RemoveAmount(amount);
                 selectedIndex = i;
@@ -38,37 +41,27 @@ public class Inventory : ScriptableObject
             itemList.Remove(itemList[selectedIndex]);
         }
     }
-
-    public int CheckAmount (Item item)
+    public int CheckAmount (int itemID)
     {
-        bool itemFound = false;
         foreach (InventorySlot slot in itemList)
         {
-            if (item.name == slot.item.name)
+            if (itemID == slot.itemID)
             {
-                itemFound = true;
                 return slot.amount;
             }
         }
-        if (!itemFound)
-        {
-            return 0;
-        }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 }
 
 [System.Serializable]
 public class InventorySlot
 {
-    public Item item;
+    public int itemID;
     public int amount;
-    public InventorySlot (Item item, int amount)
+    public InventorySlot (int itemID, int amount)
     {
-        this.item = item;
+        this.itemID = itemID;
         this.amount = amount;
     }
 
