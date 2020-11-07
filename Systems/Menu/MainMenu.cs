@@ -8,9 +8,8 @@ public class MainMenu : MonoBehaviour
     public GameObject optionsEnterSelectedButton, optionsExitSelectedButton, controlsEnterSelectedButton, controlsExitSelectedButton, levelLoader;
     public void PlayGame()
     {
-        // PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         GameStatus.GetInstance().Load();
-        levelLoader.GetComponent<LevelLoader>().LoadLevel(PlayerPrefs.GetInt("scene", 1));
     }
     public void QuitGame()
     {

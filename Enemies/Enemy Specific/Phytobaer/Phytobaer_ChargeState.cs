@@ -35,7 +35,7 @@ public class Phytobaer_ChargeState : ChargeState
             stateMachine.ChangeState(phytobaer.meleeAttackState);
         }
 
-        else if (!isPlayerInMaxAggroRange)
+        else if (!isEnemyInMaxAggroRange)
         {
             stateMachine.ChangeState(phytobaer.idleState);
         }

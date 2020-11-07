@@ -108,7 +108,6 @@ public class Player : MonoBehaviour
         RB.velocity = workspace;
         currentVelocity = workspace;
     }
-
     public void SetVelocityY(float velocity)
     {
         workspace.Set(currentVelocity.x, velocity);
@@ -201,18 +200,6 @@ public class Player : MonoBehaviour
                 isInvulnerable = true;
                 GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, .75f);
             }
-        }
-    }
-    public virtual void ResetHealth() => GameStatus.GetInstance().currentHealth = GameStatus.GetInstance().maxHealth;
-    public virtual void AddHealth(float value)
-    {
-        if (GameStatus.GetInstance().currentHealth + value <= GameStatus.GetInstance().maxHealth)
-        {
-            GameStatus.GetInstance().currentHealth += value;
-        }
-        else
-        {
-            GameStatus.GetInstance().currentHealth = GameStatus.GetInstance().maxHealth;
         }
     }
     public virtual void OnDrawGizmos()

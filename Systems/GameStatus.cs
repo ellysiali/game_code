@@ -45,8 +45,8 @@ public class GameStatus : MonoBehaviour
         int index = 0;
         Player player = GameObject.FindObjectOfType<Player>();
 
+        currentHealth = maxHealth;
         PlayerPrefs.SetFloat("maxHealth", maxHealth);
-        PlayerPrefs.SetFloat("currentHealth", currentHealth);
         PlayerPrefs.SetFloat("coinCount", coinCount);
         PlayerPrefs.SetFloat("attackMultiplier", attackMultiplier);
         PlayerPrefs.SetFloat("defenseMultiplier", defenseMultiplier);
@@ -71,13 +71,14 @@ public class GameStatus : MonoBehaviour
     }
     public void Load()
     {
+        LevelLoader levelLoader = GameObject.FindObjectOfType<LevelLoader>();
         int index = 0;
-        bool finished = false;
-        maxHealth = PlayerPrefs.GetFloat("maxHealth", maxHealth);
-        currentHealth = PlayerPrefs.GetFloat("currentHealth", currentHealth);
-        coinCount = PlayerPrefs.GetFloat("coinCount", coinCount);
-        attackMultiplier = PlayerPrefs.GetFloat("attackMultiplier", attackMultiplier);
-        defenseMultiplier = PlayerPrefs.GetFloat("defenseMultiplier", defenseMultiplier);
+        bool finished;
+        maxHealth = PlayerPrefs.GetFloat("maxHealth", 100);
+        currentHealth = maxHealth;
+        coinCount = PlayerPrefs.GetFloat("coinCount", 0);
+        attackMultiplier = PlayerPrefs.GetFloat("attackMultiplier", 1f);
+        defenseMultiplier = PlayerPrefs.GetFloat("defenseMultiplier", 1f);
 
         spawnPosition = new Vector2(PlayerPrefs.GetFloat("spawnPositionX", 0f), PlayerPrefs.GetFloat("spawnPositionY", -0.74f));
         flipOnStart = false;
@@ -91,5 +92,17 @@ public class GameStatus : MonoBehaviour
             finished = !PlayerPrefs.HasKey("inventory_" + index + "_id");
         }
         NPCIndexes.Clear();
+        levelLoader.LoadLevel(PlayerPrefs.GetInt("scene", 1));
+    }
+    public void AddHealth(float value)
+    {
+        if (currentHealth + value <= maxHealth)
+        {
+            currentHealth += value;
+        }
+        else
+        {
+            currentHealth = maxHealth;
+        }
     }
 }

@@ -15,7 +15,6 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Transform itemDetails;
     [SerializeField] private Transform confirmation;
     [SerializeField] public PlayerInputHandler InputHandler;
-    public Player player;
     #endregion
 
     #region Other Variables
@@ -32,7 +31,6 @@ public class InventoryManager : MonoBehaviour
         isInventoryActive = isConfirmationActive = false;
         selectedIndex = 0;
         inventoryUI.gameObject.SetActive(false);
-        player = GameObject.Find("Player").GetComponent<Player>();
     }
     private void Update()
     {
@@ -201,7 +199,7 @@ public class InventoryManager : MonoBehaviour
             if (confirmUse)
             {
                 Consumable consumable = (Consumable)GetSelectedItem();
-                player.AddHealth(consumable.healValue);
+                GameStatus.GetInstance().AddHealth(consumable.healValue);
                 GameStatus.GetInstance().playerInventory.RemoveItem(database.items.IndexOf(GetSelectedItem()), 1);
                 if (GameStatus.GetInstance().playerInventory.CheckAmount(database.items.IndexOf(GetSelectedItem())) == 0)
                 {

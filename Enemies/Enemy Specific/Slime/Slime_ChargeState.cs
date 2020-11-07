@@ -36,7 +36,7 @@ public class Slime_ChargeState : ChargeState
             stateMachine.ChangeState(slime.meleeAttackState);
         }
 
-        else if (!isPlayerInMaxAggroRange)
+        else if (!isEnemyInMaxAggroRange)
         {
             stateMachine.ChangeState(slime.idleState);
         }

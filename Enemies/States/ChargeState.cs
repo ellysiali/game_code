@@ -5,7 +5,7 @@ using UnityEngine;
 public class ChargeState : State
 {
     protected D_ChargeState stateData;
-    protected bool isPlayerInMinAggroRange, isPlayerInMaxAggroRange, isDetectingLedge, isDetectingWall, isChargeTimeOver,
+    protected bool isEnemyInMinAggroRange, isEnemyInMaxAggroRange, isDetectingLedge, isDetectingWall, isChargeTimeOver,
                    performCloseRangeAction;
 
     public ChargeState(Entity entity, FiniteStateMachine stateMachine,
@@ -18,25 +18,32 @@ public class ChargeState : State
     public override void DoChecks()
     {
         base.DoChecks();
-        if (entity.CheckEnemyInMaxAggroRange() && !entity.CheckFacingEnemy() && entity.CheckCanAttack())
-        {
-            entity.Flip();
-        }
         entity.SetVelocityX(stateData.movementSpeed);
 
         if ((!entity.CheckLedge() || entity.CheckWall()) && entity.CheckGround())
         {
-            entity.SetVelocityY(stateData.jumpVelocity);
+            if (entity.CheckFacingEnemy())
+            {
+                entity.SetVelocityY(stateData.jumpVelocity);
+            }
+            else
+            {
+                entity.Flip();
+            }
         }
 
-        isPlayerInMinAggroRange = entity.CheckEnemyInMinAggroRange();
-        isPlayerInMaxAggroRange = entity.CheckEnemyInMaxAggroRange();
+        isEnemyInMinAggroRange = entity.CheckEnemyInMinAggroRange();
+        isEnemyInMaxAggroRange = entity.CheckEnemyInMaxAggroRange();
         performCloseRangeAction = entity.CheckEnemyInCloseRangeAction();
     }
 
     public override void Enter()
     {
         base.Enter();
+        if (!entity.CheckFacingEnemy())
+        {
+            entity.Flip();
+        }
     }
 
     public override void Exit()

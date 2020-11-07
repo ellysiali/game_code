@@ -86,9 +86,7 @@ public class GameManager : MonoBehaviour
     {
         if (Time.time >= respawnTimeStart + respawnTime && toRespawn)
         {
-            playerScript.ResetHealth();
-            player.transform.position = respawnPoint.position;
-            player.SetActive(true);
+            GameStatus.GetInstance().Load();
             toRespawn = false;
         }
     }
