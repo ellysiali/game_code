@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TutorialScript : MonoBehaviour
 {
-    const float INCREMENT = 0.05f;
+    const float Increment = 0.05f;
     private float opacity;
     private bool isActive;
 
@@ -19,14 +19,14 @@ public class TutorialScript : MonoBehaviour
         {
             if (opacity < 1f)
             {
-                opacity += INCREMENT;
+                opacity += Increment;
             }
         }
         else
         {
             if (opacity > 0f)
             {
-                opacity -= INCREMENT;
+                opacity -= Increment;
             }
         }
         gameObject.GetComponent<SpriteRenderer>().color =

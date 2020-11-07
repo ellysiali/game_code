@@ -40,6 +40,10 @@ public class Option : MonoBehaviour
                 case nameof(StoreData):
                     storeManager.ActivateStore((StoreData)action);
                     break;
+                case nameof(Save):
+                    dialogueManager.ExitDialogue();
+                    GameStatus.GetInstance().Save();
+                    break;
                 default:
                     Debug.LogError("Unknown action type:" + action.GetType().Name);
                     dialogueManager.ExitDialogue();

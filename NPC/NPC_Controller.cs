@@ -5,6 +5,7 @@ using UnityEngine;
 public class NPC_Controller : MonoBehaviour
 {
     private DialogueManager dialogueManager;
+    private int activeIndex;
 
     [SerializeField] private GameObject DialogueManager;
     [SerializeField] private DialogueList dialogueList;
@@ -20,23 +21,37 @@ public class NPC_Controller : MonoBehaviour
 
     public void ActivateDialogue()
     {
+        GameStatus.GetInstance().NPCIndexes.TryGetValue(gameObject.name + "_index", out activeIndex);
+        if (activeIndex == 0)
+        {
+            activeIndex = PlayerPrefs.GetInt(gameObject.name + "_index", 0);
+        }
+
         dialogueManager.StartDialogue(GetActiveDialogue());
         if (!CheckEndofList())
         {
-            dialogueList.activeIndex++;
+            activeIndex++;
+            SetActiveIndex(activeIndex);
         }
     }
     public void SetActiveIndex(int newIndex)
     {
-        dialogueList.activeIndex = newIndex;
+        try
+        {
+            GameStatus.GetInstance().NPCIndexes.Add(gameObject.name + "_index", newIndex);
+        }
+        catch
+        {
+            GameStatus.GetInstance().NPCIndexes[gameObject.name + "_index"] = newIndex;
+        }
     }
     private Dialogue GetActiveDialogue()
     {
-        return dialogueList.dialogues[dialogueList.activeIndex];
+        return dialogueList.dialogues[activeIndex];
     }
     private bool CheckEndofList()
     {
-        return dialogueList.activeIndex == dialogueList.dialogues.Length - 1;
+        return activeIndex == dialogueList.dialogues.Length - 1;
     }
     public bool CheckIfDialogueActive() => dialogueManager.CheckIfDialogueActive();
 }

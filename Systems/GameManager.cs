@@ -90,7 +90,6 @@ public class GameManager : MonoBehaviour
             player.transform.position = respawnPoint.position;
             player.SetActive(true);
             toRespawn = false;
-            yellowHealthBar.fillAmount = 1f;
         }
     }
 }

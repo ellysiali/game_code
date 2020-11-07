@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Inventory
 {
+    // TODO: potentially change base/derived class from list to dict
     public List<InventorySlot> itemList;
     public Inventory()
     {

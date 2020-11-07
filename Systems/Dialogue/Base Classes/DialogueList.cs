@@ -7,5 +7,4 @@ using UnityEngine;
 public class DialogueList : ScriptableObject
 {
     public Dialogue[] dialogues;
-    public int activeIndex = 0;
 }
