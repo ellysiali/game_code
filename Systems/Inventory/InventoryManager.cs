@@ -59,11 +59,12 @@ public class InventoryManager : MonoBehaviour
         InputHandler.SetActionMapToInteractions();
         isInventoryActive = confirmUse = true;
 
-        foreach (InventorySlot item in GameStatus.GetInstance().playerInventory.itemList)
+        foreach (string itemName in GameStatus.GetInstance().playerInventory.items.Keys)
         {
+            int itemID = FindItemID(itemName);
             GameObject workspace = Instantiate(inventoryItemSlot, itemContainer);
-            workspace.GetComponentInChildren<InventoryItemSlot>().item = database.items[item.itemID];
-            workspace.transform.Find("Sprite").GetComponent<Image>().sprite = database.items[item.itemID].image;
+            workspace.GetComponentInChildren<InventoryItemSlot>().item = database.items[itemID];
+            workspace.transform.Find("Sprite").GetComponent<Image>().sprite = database.items[itemID].image;
             workspace.transform.Find("Sprite").GetComponent<Image>().SetNativeSize();
             workspace.transform.Find("Frame").gameObject.GetComponent<Image>().color = Color.white;
         }
@@ -88,7 +89,7 @@ public class InventoryManager : MonoBehaviour
             {
                 itemDetails.Find("Item Amount").gameObject.SetActive(true);
                 itemDetails.Find("Item Amount").GetComponent<TextMeshProUGUI>().text = 
-                    "Amount: (" + GameStatus.GetInstance().playerInventory.CheckAmount(database.items.IndexOf(GetSelectedItem())) + ")";
+                    "Amount: (" + GameStatus.GetInstance().playerInventory.CheckAmount(GetSelectedItem().name) + ")";
             }
             else
             {
@@ -202,7 +203,7 @@ public class InventoryManager : MonoBehaviour
             if (confirmUse)
             {
                 UseConsumable((Consumable)GetSelectedItem());
-                GameStatus.GetInstance().playerInventory.RemoveItem(database.items.IndexOf(GetSelectedItem()), 1);
+                GameStatus.GetInstance().playerInventory.RemoveItem(GetSelectedItem().name, 1);
                 UpdateSelectedItem();
                 isConfirmationActive = false;
             }
@@ -256,7 +257,7 @@ public class InventoryManager : MonoBehaviour
     }
     private void UpdateSelectedItem()
     {
-        if (GameStatus.GetInstance().playerInventory.CheckAmount(database.items.IndexOf(GetSelectedItem())) == 0)
+        if (GameStatus.GetInstance().playerInventory.CheckAmount(GetSelectedItem().name) == 0)
         {
             if (selectedIndex == 0)
             {
@@ -277,6 +278,19 @@ public class InventoryManager : MonoBehaviour
                 GameObject.Destroy(itemContainer.GetChild(selectedIndex + 1).gameObject);
             }
         }
+    }
+    private int FindItemID(string itemName)
+    {
+        int index = 0;
+        foreach (Item item in database.items)
+        {
+            if (item.name == itemName)
+            {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
     #endregion
 }

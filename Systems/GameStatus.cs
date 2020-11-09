@@ -77,6 +77,8 @@ public class GameStatus : MonoBehaviour
 
         currentHealth = MaxHealth;
         currentMagic = MaxMagic;
+
+        PlayerPrefs.DeleteAll();
         PlayerPrefs.SetFloat("coinCount", coinCount);
         PlayerPrefs.SetFloat("attackMultiplier", attackMultiplier);
         PlayerPrefs.SetFloat("defenseMultiplier", defenseMultiplier);
@@ -85,16 +87,19 @@ public class GameStatus : MonoBehaviour
         PlayerPrefs.SetFloat("spawnPositionY", player.gameObject.transform.position.y);
         PlayerPrefs.SetInt("scene", SceneManager.GetActiveScene().buildIndex);
 
-        foreach (InventorySlot item in playerInventory.itemList)
+        foreach (KeyValuePair<string, int> item in playerInventory.items)
         {
-            PlayerPrefs.SetInt("inventory_" + index + "_id", item.itemID);
-            PlayerPrefs.SetInt("inventory_" + index + "_count", item.amount);
+            PlayerPrefs.SetString("inventory_" + index + "_name", item.Key);
+            PlayerPrefs.SetInt("inventory_" + index + "_amount", item.Value);
             index++;
         }
 
+        index = 0;
         foreach (KeyValuePair<string, int> entry in NPCIndexes)
         {
-            PlayerPrefs.SetInt(entry.Key, entry.Value);
+            PlayerPrefs.SetString("NPC_" + index + "_name", entry.Key);
+            PlayerPrefs.SetInt("NPC_" + index + "_index", entry.Value);
+            index++;
         }
 
         PlayerPrefs.Save();
@@ -103,7 +108,6 @@ public class GameStatus : MonoBehaviour
     {
         SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
         int index = 0;
-        bool finished;
         currentHealth = MaxHealth;
         currentMagic = MaxMagic;
         coinCount = PlayerPrefs.GetFloat("coinCount", 0);
@@ -113,15 +117,20 @@ public class GameStatus : MonoBehaviour
 
         spawnPosition = new Vector2(PlayerPrefs.GetFloat("spawnPositionX", 0f), PlayerPrefs.GetFloat("spawnPositionY", -0.74f));
 
-        playerInventory.itemList.Clear();
-        finished = !PlayerPrefs.HasKey("inventory_" + index + "_id");
-        while (!finished)
+        playerInventory.items.Clear();
+        while (PlayerPrefs.HasKey("inventory_" + index + "_name"))
         {
-            playerInventory.AddItem(PlayerPrefs.GetInt("inventory_" + index + "_id"), PlayerPrefs.GetInt("inventory_" + index + "_count"));
+            playerInventory.AddItem(PlayerPrefs.GetString("inventory_" + index + "_name"), PlayerPrefs.GetInt("inventory_" + index + "_amount"));
             index++;
-            finished = !PlayerPrefs.HasKey("inventory_" + index + "_id");
         }
+        index = 0;
         NPCIndexes.Clear();
+        while (PlayerPrefs.HasKey("NPC_" + index + "_name"))
+        {
+            NPCIndexes.Add(PlayerPrefs.GetString("NPC_" + index + "_name"), PlayerPrefs.GetInt("NPC_" + index + "_index"));
+            index++;
+        }
+
         sceneLoader.LoadScene(PlayerPrefs.GetInt("scene", 1));
     }
     public void Respawn()

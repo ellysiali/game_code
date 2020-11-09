@@ -103,7 +103,7 @@ public class StoreManager: MonoBehaviour
         if (GetSelectedItem().type == ItemType.Consumable)
         {
             itemDetails.Find("Item Amount").gameObject.SetActive(true);
-            itemDetails.Find("Item Amount").GetComponent<TextMeshProUGUI>().text = "Inventory: (" + GameStatus.GetInstance().playerInventory.CheckAmount(database.items.IndexOf(GetSelectedItem())) + ")";
+            itemDetails.Find("Item Amount").GetComponent<TextMeshProUGUI>().text = "Inventory: (" + GameStatus.GetInstance().playerInventory.CheckAmount(GetSelectedItem().name) + ")";
         }
         else
         {
@@ -112,7 +112,7 @@ public class StoreManager: MonoBehaviour
     }
     private void Purchase()
     {
-        GameStatus.GetInstance().playerInventory.AddItem(database.items.IndexOf(GetSelectedItem()), 1);
+        GameStatus.GetInstance().playerInventory.AddItem(GetSelectedItem().name, 1);
         GameStatus.GetInstance().coinCount -= GetSelectedItem().price;
         MoveSelectLeft();
         itemContainer.GetChild(selectedIndex + 1).GetComponent<ItemSlot>().Remove();
@@ -120,7 +120,7 @@ public class StoreManager: MonoBehaviour
     }
     private void PurchaseInBulk(int amount)
     {
-        GameStatus.GetInstance().playerInventory.AddItem(database.items.IndexOf(GetSelectedItem()), amount);
+        GameStatus.GetInstance().playerInventory.AddItem(GetSelectedItem().name, amount);
         GameStatus.GetInstance().coinCount -= amount * GetSelectedItem().price;
         isBulkBuyingActive = false;
         dialogueManager.StartDialogue(storeData.purchaseDialogue);

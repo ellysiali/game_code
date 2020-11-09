@@ -22,10 +22,6 @@ public class NPC_Controller : MonoBehaviour
     public void ActivateDialogue()
     {
         GameStatus.GetInstance().NPCIndexes.TryGetValue(gameObject.name + "_index", out activeIndex);
-        if (activeIndex == 0)
-        {
-            activeIndex = PlayerPrefs.GetInt(gameObject.name + "_index", 0);
-        }
 
         dialogueManager.StartDialogue(GetActiveDialogue());
         if (!CheckEndofList())
@@ -36,13 +32,14 @@ public class NPC_Controller : MonoBehaviour
     }
     public void SetActiveIndex(int newIndex)
     {
-        try
-        {
-            GameStatus.GetInstance().NPCIndexes.Add(gameObject.name + "_index", newIndex);
-        }
-        catch
+        string indexName = gameObject.name + "_index";
+        if (GameStatus.GetInstance().NPCIndexes.ContainsKey(indexName))
         {
             GameStatus.GetInstance().NPCIndexes[gameObject.name + "_index"] = newIndex;
+        }
+        else
+        {
+            GameStatus.GetInstance().NPCIndexes.Add(gameObject.name + "_index", newIndex);
         }
     }
     private Dialogue GetActiveDialogue()
