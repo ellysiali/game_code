@@ -77,12 +77,8 @@ public class PlayerAttack2State : PlayerAbilityState
     {
         base.PhysicsUpdate();
         Vector2 input = player.InputHandler.MovementInput;
-        if (player.CheckIfGrounded())
-        {
-            input.x *= playerData.attack2VelocityMultiplier;
-        }
 
-        player.SetVelocityX(playerData.movementVelocity * input.x);
+        player.SetVelocityX(0f);
 
         if (Time.time - playerData.attackTriggerDelay >= startTime)
         {

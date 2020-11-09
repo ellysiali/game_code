@@ -23,8 +23,13 @@ public class GameStatus : MonoBehaviour
     public Inventory playerInventory;
     public Dictionary<string, int> NPCIndexes = new Dictionary<string, int>();
     #endregion
+
     #region Other Variables
     static GameStatus instance;
+
+    [SerializeField] private float respawnTime = 2f;
+    private float respawnTimeStart;
+    private bool toRespawn;
 
     public bool BuffActive { get; private set; }
     private float lastBuffTime = 0f;
@@ -36,6 +41,8 @@ public class GameStatus : MonoBehaviour
     {
         playerInventory = new Inventory();
     }
+
+    #region Unity Callback Functions
     public void Start()
     {
         if (instance != null)
@@ -49,6 +56,7 @@ public class GameStatus : MonoBehaviour
     }
     public void Update()
     {
+        CheckRespawn();
         if (BuffActive && Time.time > lastBuffTime + buffDuration)
         {
             BuffActive = false;
@@ -59,6 +67,9 @@ public class GameStatus : MonoBehaviour
             StopAllCoroutines();
         }
     }
+    #endregion
+
+    #region Data/Saving Functions
     public void Save()
     {
         int index = 0;
@@ -113,6 +124,22 @@ public class GameStatus : MonoBehaviour
         NPCIndexes.Clear();
         levelLoader.LoadLevel(PlayerPrefs.GetInt("scene", 1));
     }
+    public void Respawn()
+    {
+        respawnTimeStart = Time.time;
+        toRespawn = true;
+    }
+    private void CheckRespawn()
+    {
+        if (Time.time >= respawnTimeStart + respawnTime && toRespawn)
+        {
+            GameStatus.GetInstance().Load();
+            toRespawn = false;
+        }
+    }
+    #endregion
+
+    #region Consumable Functions
     public void AddHealth(float value)
     {
         if (currentHealth + value <= MaxHealth)
@@ -170,4 +197,5 @@ public class GameStatus : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
+    #endregion
 }

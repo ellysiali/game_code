@@ -77,6 +77,11 @@ public class Entity : MonoBehaviour
         velocityWorkspace.Set(rigidBody.velocity.x, velocity);
         rigidBody.velocity = velocityWorkspace;
     }
+    public virtual void SetKnockBack(float horizontalVelocity, float verticalVelocity)
+    {
+        velocityWorkspace.Set(horizontalVelocity * lastDamageDirection, verticalVelocity);
+        rigidBody.velocity = velocityWorkspace;
+    }
     public virtual void SetLastAttack() => lastAttack = Time.time;
     public virtual void SetFriendly()
     {
@@ -162,11 +167,6 @@ public class Entity : MonoBehaviour
     #region Other Functions
     public virtual void Damage (AttackDetails attackDetails)
     {
-        if (!CheckFacingPlayer())
-        {
-            Flip();
-        }
-
         currentHealth -= attackDetails.damageAmount;
         isStunned = true;
 
@@ -194,17 +194,12 @@ public class Entity : MonoBehaviour
                          rigidBody.position.y),
             Quaternion.Euler(0f, 0f, Random.Range(0f, 135f) * lastDamageDirection));
         
-        DamageKnockBack(attackDetails.knockbackX, attackDetails.knockbackY);
+        SetKnockBack(attackDetails.knockbackX, attackDetails.knockbackY);
 
         if(currentHealth <= 0)
         {
             isDead = true;
         }
-    }
-    public virtual void DamageKnockBack(float horizontalVelocity, float verticalVelocity)
-    {
-        velocityWorkspace.Set(horizontalVelocity * lastDamageDirection, verticalVelocity);
-        rigidBody.velocity = velocityWorkspace;
     }
     public virtual void Flip()
     {

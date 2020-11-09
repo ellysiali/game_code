@@ -6,18 +6,12 @@ using Cinemachine;
 using TMPro;
 using System;
 
-public class GameManager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Transform respawnPoint;
-    [SerializeField] private GameObject player;
-    [SerializeField] private float respawnTime;
     [SerializeField] private Image healthBar;
     [SerializeField] private Image yellowHealthBar;
     [SerializeField] private Image potion;
     [SerializeField] private TextMeshProUGUI coinText;
-
-    private float respawnTimeStart;
-    private bool toRespawn;
 
     /**************************************************************************
      Function: 	  Start
@@ -43,7 +37,6 @@ public class GameManager : MonoBehaviour
     {
         coinText.text = "" + GameStatus.GetInstance().coinCount;
         UpdateHealthBar();
-        CheckRespawn();
         potion.gameObject.SetActive(GameStatus.GetInstance().BuffActive);
     }
 
@@ -74,31 +67,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /**************************************************************************
-    Function: 	  Respawn
-    Description:  Initializes the parameters needed to respawn the player
-    *************************************************************************/
-    public void Respawn()
-    {
-        respawnTimeStart = Time.time;
-        toRespawn = true;
-    }
-
-    /**************************************************************************
-    Function: 	  CheckRespawn
-    Description:  Checks and initiates respawn
-    *************************************************************************/
-
-    private void CheckRespawn()
-    {
-        if (Time.time >= respawnTimeStart + respawnTime && toRespawn)
-        {
-            GameStatus.GetInstance().Load();
-            toRespawn = false;
-        }
-    }
-
-    public void UpdatePotion(Sprite sprite)
+    public void UpdateConsumableSprite(Sprite sprite)
     {
             potion.sprite = sprite;
     }

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class StunState : State
 {
-    private float stunTime = 0.5f;
+    const float StunTime = 0.5f;
 
-    protected bool isStunTimeOver, isGrounded, isMovementStopped,
-                   performCloseRangeAction, isPlayerInMinAggroRange;
+    protected bool isStunTimeOver, performCloseRangeAction, isPlayerInMinAggroRange;
 
     public StunState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName) :base(entity, stateMachine, animationBoolName)
     {
@@ -15,7 +14,6 @@ public class StunState : State
     public override void DoChecks()
     {
         base.DoChecks();
-        isGrounded = entity.CheckGround();
         performCloseRangeAction = entity.CheckEnemyInCloseRangeAction();
         isPlayerInMinAggroRange = entity.CheckEnemyInMinAggroRange();
     }
@@ -24,7 +22,6 @@ public class StunState : State
     {
         base.Enter();
         isStunTimeOver = false;
-        isMovementStopped = false;
     }
 
     public override void Exit()
@@ -35,21 +32,19 @@ public class StunState : State
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (Time.time >= startTime + stunTime)
+        if (Time.time >= startTime + StunTime)
         {
             isStunTimeOver = true;
-        }
-
-        if(isGrounded && Time.time >= startTime + stunTime && !isMovementStopped)
-        {
-            entity.SetVelocityX(0);
-            isMovementStopped = true;
         }
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        if (entity.rigidBody.velocity.y <= 0)
+        {
+            entity.SetVelocityX(0);
+        }
     }
 
 }

@@ -21,20 +21,17 @@ public class PlayerData : ScriptableObject
 
     [Header("Attack1 State")]
     public float attack1Damage = 10f;
-    public float attack1VelocityMultiplier = 0f;
     public float attackTriggerDelay = 0.15f;
     public float attack1KnockbackX = 3f;
     public float attack1KnockbackY = 3f;
 
     [Header("Attack2 State")]
     public float attack2Damage = 10f;
-    public float attack2VelocityMultiplier = 0f;
     public float attack2KnockbackX = 3f;
     public float attack2KnockbackY = 3f;
 
     [Header("Attack3 State")]
     public float attack3Damage = 20f;
-    public float attack3VelocityMultiplier = 0f;
     public float attack3KnockbackX = 5f;
     public float attack3KnockbackY = 5f;
 

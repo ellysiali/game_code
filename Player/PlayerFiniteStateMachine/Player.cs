@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     public Animator Anim { get; private set; }
     [SerializeField] private PlayerData playerData;
     public NPC_Controller NPC;
-    public GameManager gameManager;
+    public UIManager gameManager;
     public StoreManager storeManager;
     public InventoryManager inventoryManager;
     public CapsuleCollider2D capsuleCollider;
@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
         InputHandler = GetComponent<PlayerInputHandler>();
         RB = GetComponent<Rigidbody2D>();
         StateMachine.Initialize(IdleState);
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<UIManager>();
         storeManager = GameObject.Find("StoreManager").GetComponent<StoreManager>();
         inventoryManager = GameObject.Find("InventoryManager").GetComponent<InventoryManager>();
         capsuleCollider = GetComponent<CapsuleCollider2D>();

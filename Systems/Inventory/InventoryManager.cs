@@ -15,7 +15,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Transform itemDetails;
     [SerializeField] private Transform confirmation;
     [SerializeField] private PlayerInputHandler InputHandler;
-    private GameManager gameManager;
+    private UIManager gameManager;
     #endregion
 
     #region Other Variables
@@ -30,7 +30,7 @@ public class InventoryManager : MonoBehaviour
     #region Unity Callback Functions
     private void Start()
     {
-        gameManager = GameObject.FindObjectOfType<GameManager>().GetComponent<GameManager>();
+        gameManager = GameObject.FindObjectOfType<UIManager>().GetComponent<UIManager>();
         isInventoryActive = isConfirmationActive = false;
         selectedIndex = 0;
         inventoryUI.gameObject.SetActive(false);
@@ -201,7 +201,7 @@ public class InventoryManager : MonoBehaviour
             lastInputTime = Time.time;
             if (confirmUse)
             {
-                UsePotion((Consumable)GetSelectedItem());
+                UseConsumable((Consumable)GetSelectedItem());
                 GameStatus.GetInstance().playerInventory.RemoveItem(database.items.IndexOf(GetSelectedItem()), 1);
                 UpdateSelectedItem();
                 isConfirmationActive = false;
@@ -242,14 +242,17 @@ public class InventoryManager : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
     }
-    private void UsePotion(Consumable consumable)
+    private void UseConsumable(Consumable consumable)
     {
         GameStatus.GetInstance().potionSprite = consumable.image;
         GameStatus.GetInstance().AddHealth(consumable.health);
         GameStatus.GetInstance().AddMagic(consumable.health);
-        GameStatus.GetInstance().AddBuff(consumable.attack, consumable.defense, consumable.healingOverTime,
-            consumable.magicOverTime, consumable.buffDuration);
-        gameManager.UpdatePotion(consumable.image);
+        if (consumable.buffDuration > 0f)
+        {
+            GameStatus.GetInstance().AddBuff(consumable.attack, consumable.defense, consumable.healingOverTime,
+              consumable.magicOverTime, consumable.buffDuration);
+            gameManager.UpdateConsumableSprite(consumable.image);
+        }
     }
     private void UpdateSelectedItem()
     {
@@ -260,7 +263,8 @@ public class InventoryManager : MonoBehaviour
                 if (itemContainer.childCount > 1)
                 {
                     MoveSelectRight();
-                    GameObject.Destroy(itemContainer.GetChild(selectedIndex - 1).gameObject);
+                    selectedIndex--;
+                    GameObject.Destroy(itemContainer.GetChild(selectedIndex).gameObject);
                 }
                 else
                 {

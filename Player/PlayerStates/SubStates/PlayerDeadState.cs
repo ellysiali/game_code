@@ -11,7 +11,7 @@ public class PlayerDeadState : PlayerState
     public override void AnimationFinishTrigger()
     {
         base.AnimationFinishTrigger();
-        player.gameManager.Respawn();
+        GameStatus.GetInstance().Respawn();
         playerData.deathParticle.transform.position = player.transform.position;
         Transform.Instantiate(playerData.deathParticle);
         player.gameObject.SetActive(false);
