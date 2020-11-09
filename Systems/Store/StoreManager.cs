@@ -22,11 +22,12 @@ public class StoreManager: MonoBehaviour
     #endregion
 
     #region Other Variables
-    const float MIN_INPUT_VALUE = 0.7f;
+    const float MinInputValue = 0.7f;
+    const float WaitTime = 0.2f;
+    const int RowSize = 6;
     private bool isStoreActive, isBulkBuyingActive, isConfirmationActive, confirmPurchase;
     private int selectedIndex, bulkAmount;
     private float lastInputTime = -100f;
-    public float waitTime = 0.25f;
     #endregion
 
     #region Unity Callback Functions
@@ -144,39 +145,39 @@ public class StoreManager: MonoBehaviour
     private void MoveSelectUp()
     {
         itemContainer.GetChild(selectedIndex).GetComponent<ItemSlot>().Deselect();
-        selectedIndex -= 6;
+        selectedIndex -= RowSize;
         itemContainer.GetChild(selectedIndex).GetComponent<ItemSlot>().Select();
     }
     public void MoveSelectDown()
     {
         itemContainer.GetChild(selectedIndex).GetComponent<ItemSlot>().Deselect();
-        selectedIndex += 6;
+        selectedIndex += RowSize;
         itemContainer.GetChild(selectedIndex).GetComponent<ItemSlot>().Select();
     }
     #endregion
     private void UpdateNormalInput()
     {
-        if (InputHandler.MovementInput.x >= MIN_INPUT_VALUE && selectedIndex < itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.x >= MinInputValue && selectedIndex < itemContainer.childCount - 1 && selectedIndex % RowSize != RowSize - 1 && Time.time >= lastInputTime + WaitTime)
         {
             MoveSelectRight();
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput.x <= -MIN_INPUT_VALUE && selectedIndex > 0 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.x <= -MinInputValue && selectedIndex > 0 && selectedIndex % RowSize != 0 && Time.time >= lastInputTime + WaitTime)
         {
             MoveSelectLeft();
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput.y <= -MIN_INPUT_VALUE && selectedIndex + 6 <= itemContainer.childCount - 1 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.y <= -MinInputValue && selectedIndex + RowSize <= itemContainer.childCount - 1 && Time.time >= lastInputTime + WaitTime)
         {
             MoveSelectDown();
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput.y >= MIN_INPUT_VALUE && selectedIndex - 6 >= 0 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.y >= MinInputValue && selectedIndex - RowSize >= 0 && Time.time >= lastInputTime + WaitTime)
         {
             MoveSelectUp();
             lastInputTime = Time.time;
         }
-        else if (InputHandler.ContinueInput && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.ContinueInput && Time.time >= lastInputTime + WaitTime)
         {
             InputHandler.UseContinueInput();
             lastInputTime = Time.time;
@@ -195,7 +196,6 @@ public class StoreManager: MonoBehaviour
                     {
                         isConfirmationActive = true;
                         confirmPurchase = true;
-
                     }
                 }
                 else
@@ -204,7 +204,7 @@ public class StoreManager: MonoBehaviour
                 }
             }
         }
-        else if (InputHandler.ExitInput && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.ExitInput && Time.time >= lastInputTime + WaitTime)
         {
             InputHandler.UseExitInput();
             lastInputTime = Time.time;
@@ -213,24 +213,24 @@ public class StoreManager: MonoBehaviour
     }
     private void UpdateBulkBuyingInput()
     {        
-        if (InputHandler.MovementInput.y >= MIN_INPUT_VALUE && (bulkAmount + 1) * GetSelectedItem().price <= 
-            GameStatus.GetInstance().coinCount && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.y >= MinInputValue && (bulkAmount + 1) * GetSelectedItem().price <= 
+            GameStatus.GetInstance().coinCount && Time.time >= lastInputTime + WaitTime)
         {
             bulkAmount++;
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput.y <= -MIN_INPUT_VALUE && bulkAmount > 1 && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.y <= -MinInputValue && bulkAmount > 1 && Time.time >= lastInputTime + WaitTime)
         {
             bulkAmount--;
             lastInputTime = Time.time;
         }
-        else if (InputHandler.ContinueInput && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.ContinueInput && Time.time >= lastInputTime + WaitTime)
         {
             InputHandler.UseContinueInput();
             lastInputTime = Time.time;
             PurchaseInBulk(bulkAmount);
         }
-        else if (InputHandler.ExitInput && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.ExitInput && Time.time >= lastInputTime + WaitTime)
         {
             InputHandler.UseExitInput();
             lastInputTime = Time.time;
@@ -239,17 +239,17 @@ public class StoreManager: MonoBehaviour
     }
     private void UpdateConfirmInput()
     {
-        if (InputHandler.MovementInput.x >= MIN_INPUT_VALUE && confirmPurchase && Time.time >= lastInputTime + waitTime)
+        if (InputHandler.MovementInput.x >= MinInputValue && confirmPurchase && Time.time >= lastInputTime + WaitTime)
         {
             confirmPurchase = false;
             lastInputTime = Time.time;
         }
-        else if (InputHandler.MovementInput.x <= MIN_INPUT_VALUE && !confirmPurchase && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.MovementInput.x <= MinInputValue && !confirmPurchase && Time.time >= lastInputTime + WaitTime)
         {
             confirmPurchase = true;
             lastInputTime = Time.time;
         }
-        else if (InputHandler.ContinueInput && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.ContinueInput && Time.time >= lastInputTime + WaitTime)
         {
             InputHandler.UseContinueInput();
             if (confirmPurchase)
@@ -262,7 +262,7 @@ public class StoreManager: MonoBehaviour
                 isConfirmationActive = false;
             }
         }
-        else if (InputHandler.ExitInput && Time.time >= lastInputTime + waitTime)
+        else if (InputHandler.ExitInput && Time.time >= lastInputTime + WaitTime)
         {
             InputHandler.UseExitInput();
             isConfirmationActive = false;
@@ -270,13 +270,13 @@ public class StoreManager: MonoBehaviour
 
         if (confirmPurchase)
         {
-            confirmation.Find("Yes").GetComponent<Text>().color = Color.red;
-            confirmation.Find("No").GetComponent<Text>().color = Color.black;
+            confirmation.Find("Yes").GetComponent<TextMeshProUGUI>().color = Color.red;
+            confirmation.Find("No").GetComponent<TextMeshProUGUI>().color = Color.black;
         }
         else
         {
-            confirmation.Find("Yes").GetComponent<Text>().color = Color.black;
-            confirmation.Find("No").GetComponent<Text>().color = Color.red;
+            confirmation.Find("Yes").GetComponent<TextMeshProUGUI>().color = Color.black;
+            confirmation.Find("No").GetComponent<TextMeshProUGUI>().color = Color.red;
         }
     }
     #endregion

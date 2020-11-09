@@ -4,15 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private GameObject player;
     [SerializeField] private float respawnTime;
-    [SerializeField] public Image healthBar;
-    [SerializeField] public Image yellowHealthBar;
-    [SerializeField] public Player playerScript;
+    [SerializeField] private Image healthBar;
+    [SerializeField] private Image yellowHealthBar;
+    [SerializeField] private Image potion;
     [SerializeField] private TextMeshProUGUI coinText;
 
     private float respawnTimeStart;
@@ -24,9 +25,14 @@ public class GameManager : MonoBehaviour
      *************************************************************************/    
     void Start()
     {
-        playerScript = FindObjectOfType<Player>();
-        healthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
-        yellowHealthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
+        healthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().MaxHealth;
+        yellowHealthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().MaxHealth;
+        try
+        {
+            potion.sprite = GameStatus.GetInstance().potionSprite;
+        }
+        catch (NullReferenceException)
+        { }
     }
 
     /**************************************************************************
@@ -38,6 +44,7 @@ public class GameManager : MonoBehaviour
         coinText.text = "" + GameStatus.GetInstance().coinCount;
         UpdateHealthBar();
         CheckRespawn();
+        potion.gameObject.SetActive(GameStatus.GetInstance().BuffActive);
     }
 
     /**************************************************************************
@@ -46,11 +53,11 @@ public class GameManager : MonoBehaviour
     *************************************************************************/
     void UpdateHealthBar()
     {
-        if (healthBar.fillAmount < GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth)
+        if (healthBar.fillAmount < GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().MaxHealth)
         {
-            if (healthBar.fillAmount + 0.01f > GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth)
+            if (healthBar.fillAmount + 0.01f > GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().MaxHealth)
             {
-                healthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
+                healthBar.fillAmount = GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().MaxHealth;
             }
             else
             {
@@ -59,7 +66,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            healthBar.fillAmount = (float)GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().maxHealth;
+            healthBar.fillAmount = (float)GameStatus.GetInstance().currentHealth / GameStatus.GetInstance().MaxHealth;
         }
         if (yellowHealthBar.fillAmount > healthBar.fillAmount)
         {
@@ -89,5 +96,10 @@ public class GameManager : MonoBehaviour
             GameStatus.GetInstance().Load();
             toRespawn = false;
         }
+    }
+
+    public void UpdatePotion(Sprite sprite)
+    {
+            potion.sprite = sprite;
     }
 }

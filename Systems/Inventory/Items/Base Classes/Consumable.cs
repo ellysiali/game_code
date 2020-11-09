@@ -6,7 +6,14 @@ using UnityEngine;
 
 public class Consumable : Item
 {
-    public float healValue = 0;
+    public float health = 0f;
+    public float magic = 0f;
+    public float attack = 0f;
+    public float defense = 0f;
+    public float healingOverTime = 0f;
+    public float magicOverTime = 0f;
+    public float buffDuration = 60f;
+
     public void Awake()
     {
         type = ItemType.Consumable;

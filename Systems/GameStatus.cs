@@ -6,20 +6,30 @@ using UnityEngine.SceneManagement;
 public class GameStatus : MonoBehaviour
 {
     #region Player Stats/Info
-    public float maxHealth = 100f;
+    public float MaxHealth = 100f;
+    public float MaxMagic = 100f;
     public float currentHealth = 100f;
+    public float currentMagic = 100f;
     public float coinCount = 0f;
+
     public float attackMultiplier = 1f;
     public float defenseMultiplier = 1f;
+    public float healthOverTime = 0f;
+    public float magicOverTime = 0f;
 
-    public Vector2 spawnPosition = new Vector2(0f, 0f);
     public bool flipOnStart = false;
+    public Vector2 spawnPosition = new Vector2(0f, 0f);
 
     public Inventory playerInventory;
     public Dictionary<string, int> NPCIndexes = new Dictionary<string, int>();
     #endregion
     #region Other Variables
     static GameStatus instance;
+
+    public bool BuffActive { get; private set; }
+    private float lastBuffTime = 0f;
+    private float buffDuration = 0f;
+    public Sprite potionSprite;
     #endregion
     public static GameStatus GetInstance() => instance;
     public GameStatus()
@@ -39,14 +49,23 @@ public class GameStatus : MonoBehaviour
     }
     public void Update()
     {
+        if (BuffActive && Time.time > lastBuffTime + buffDuration)
+        {
+            BuffActive = false;
+            attackMultiplier = 1f;
+            defenseMultiplier = 1f;
+            healthOverTime = 0f;
+            magicOverTime = 0f;
+            StopAllCoroutines();
+        }
     }
     public void Save()
     {
         int index = 0;
         Player player = GameObject.FindObjectOfType<Player>();
 
-        currentHealth = maxHealth;
-        PlayerPrefs.SetFloat("maxHealth", maxHealth);
+        currentHealth = MaxHealth;
+        currentMagic = MaxMagic;
         PlayerPrefs.SetFloat("coinCount", coinCount);
         PlayerPrefs.SetFloat("attackMultiplier", attackMultiplier);
         PlayerPrefs.SetFloat("defenseMultiplier", defenseMultiplier);
@@ -74,14 +93,14 @@ public class GameStatus : MonoBehaviour
         LevelLoader levelLoader = GameObject.FindObjectOfType<LevelLoader>();
         int index = 0;
         bool finished;
-        maxHealth = PlayerPrefs.GetFloat("maxHealth", 100);
-        currentHealth = maxHealth;
+        currentHealth = MaxHealth;
+        currentMagic = MaxMagic;
         coinCount = PlayerPrefs.GetFloat("coinCount", 0);
         attackMultiplier = PlayerPrefs.GetFloat("attackMultiplier", 1f);
         defenseMultiplier = PlayerPrefs.GetFloat("defenseMultiplier", 1f);
+        BuffActive = false;
 
         spawnPosition = new Vector2(PlayerPrefs.GetFloat("spawnPositionX", 0f), PlayerPrefs.GetFloat("spawnPositionY", -0.74f));
-        flipOnStart = false;
 
         playerInventory.itemList.Clear();
         finished = !PlayerPrefs.HasKey("inventory_" + index + "_id");
@@ -96,13 +115,59 @@ public class GameStatus : MonoBehaviour
     }
     public void AddHealth(float value)
     {
-        if (currentHealth + value <= maxHealth)
+        if (currentHealth + value <= MaxHealth)
         {
             currentHealth += value;
         }
         else
         {
-            currentHealth = maxHealth;
+            currentHealth = MaxHealth;
+        }
+    }
+    public void AddMagic(float value)
+    {
+        if (currentMagic + value <= MaxMagic)
+        {
+            currentMagic += value;
+        }
+        else
+        {
+            currentMagic = MaxMagic;
+        }
+    }
+    public void AddBuff(float attack, float defense, float HoT, float MoT, float duration)
+    {
+        BuffActive = true;
+        attackMultiplier = 1f + attack;
+        defenseMultiplier = 1f - defense;
+        healthOverTime = HoT;
+        magicOverTime = MoT;
+        buffDuration = duration;
+        lastBuffTime = Time.time;
+
+        if (HoT > 0f)
+        {
+            StartCoroutine(HealOverTime());
+        }
+        if (MoT > 0f)
+        {
+            StartCoroutine(MagicOverTime());
+        }
+    }
+    private IEnumerator HealOverTime()
+    {
+        while (healthOverTime > 0f)
+        { 
+            AddHealth(healthOverTime);
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    private IEnumerator MagicOverTime()
+    {
+        while (magicOverTime > 0f)
+        {
+            AddMagic(healthOverTime);
+            yield return new WaitForSeconds(1f);
         }
     }
 }

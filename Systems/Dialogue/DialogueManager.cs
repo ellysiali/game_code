@@ -13,7 +13,7 @@ public class DialogueManager : MonoBehaviour
     #region Other Variables
     const float MinInputValue = 0.7f;
     private int activeDialogueLine, selectedOption;
-    private bool dialogueIsActive, questionIsActive, isStoreActive;
+    private bool dialogueIsActive, questionIsActive;
     private string activeLine;
     private Dialogue dialogue;
     private float lastInputTime = -100f;
@@ -94,7 +94,7 @@ public class DialogueManager : MonoBehaviour
             StopAllCoroutines();
             ContinueDialogue();
         }
-        else if (InputHandler.ExitInput && !storeManager.CheckIfStoreActive())
+        else if (InputHandler.ExitInput && dialogueIsActive && !storeManager.CheckIfStoreActive())
         {
             InputHandler.UseExitInput();
         }
