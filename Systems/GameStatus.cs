@@ -101,7 +101,7 @@ public class GameStatus : MonoBehaviour
     }
     public void Load()
     {
-        LevelLoader levelLoader = GameObject.FindObjectOfType<LevelLoader>();
+        SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
         int index = 0;
         bool finished;
         currentHealth = MaxHealth;
@@ -122,7 +122,7 @@ public class GameStatus : MonoBehaviour
             finished = !PlayerPrefs.HasKey("inventory_" + index + "_id");
         }
         NPCIndexes.Clear();
-        levelLoader.LoadLevel(PlayerPrefs.GetInt("scene", 1));
+        sceneLoader.LoadScene(PlayerPrefs.GetInt("scene", 1));
     }
     public void Respawn()
     {

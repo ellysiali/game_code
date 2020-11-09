@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 public class MainMenu : MonoBehaviour
 {
-    public GameObject optionsEnterSelectedButton, optionsExitSelectedButton, controlsEnterSelectedButton, controlsExitSelectedButton, levelLoader;
+    public GameObject optionsEnterSelectedButton, optionsExitSelectedButton, controlsEnterSelectedButton, 
+        controlsExitSelectedButton, sceneLoader;
     public void PlayGame()
     {
-        //PlayerPrefs.DeleteAll();
+        // PlayerPrefs.DeleteAll();
         GameStatus.GetInstance().Load();
     }
     public void QuitGame()

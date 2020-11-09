@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelLoader : MonoBehaviour
+public class SceneLoader : MonoBehaviour
 {
     public Animator transition;
     public float transitionTime = 1f;
-    public void LoadNextLevel()
+    public void LoadNextScene()
     {
         StartCoroutine(Load(SceneManager.GetActiveScene().buildIndex + 1));
     }
-    public void LoadLevel(int buildIndex)
+    public void LoadScene(int buildIndex)
     {
         StartCoroutine(Load(buildIndex));
     }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelTransition : MonoBehaviour
+public class SceneTransition : MonoBehaviour
 {
     [SerializeField] private PlayerData playerData;
-    [SerializeField] private LevelLoader levelLoader;
+    [SerializeField] private SceneLoader sceneLoader;
     public float xPosition, yPosition;
     public int sceneIndex;
     private Vector2 workspace;
@@ -14,7 +14,7 @@ public class LevelTransition : MonoBehaviour
 
     private void Start()
     {
-        levelLoader = GameObject.Find("LevelLoader").GetComponent<LevelLoader>();
+        sceneLoader = GameObject.Find("SceneLoader").GetComponent<SceneLoader>();
         player = FindObjectOfType<Player>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -31,7 +31,7 @@ public class LevelTransition : MonoBehaviour
             {
                 GameStatus.GetInstance().flipOnStart = false;
             }
-            levelLoader.GetComponent<LevelLoader>().LoadLevel(sceneIndex);
+            sceneLoader.GetComponent<SceneLoader>().LoadScene(sceneIndex);
         }
     }
 }
