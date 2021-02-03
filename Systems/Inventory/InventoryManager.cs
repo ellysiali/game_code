@@ -245,11 +245,11 @@ public class InventoryManager : MonoBehaviour
     }
     private void UseConsumable(Consumable consumable)
     {
-        GameStatus.GetInstance().potionSprite = consumable.image;
         GameStatus.GetInstance().AddHealth(consumable.health);
         GameStatus.GetInstance().AddMagic(consumable.health);
         if (consumable.buffDuration > 0f)
         {
+            GameStatus.GetInstance().potionSprite = consumable.image;
             GameStatus.GetInstance().AddBuff(consumable.attack, consumable.defense, consumable.healingOverTime,
               consumable.magicOverTime, consumable.buffDuration);
             gameManager.UpdateConsumableSprite(consumable.image);

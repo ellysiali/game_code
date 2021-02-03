@@ -6,8 +6,10 @@ public class FollowState : State
 {
     D_FollowState stateData;
 
+    static float FlipCooldown = 1f;
     protected bool isInMinPlayerRange, isInMaxPlayerRange, outOfRange;
     protected float lastInMaxPlayerRange;
+    private float lastFlipTime = -100f;
 
     public FollowState(Entity entity, FiniteStateMachine stateMachine, string animationBoolName, D_FollowState stateData) : base(entity, stateMachine, animationBoolName)
     {
@@ -26,9 +28,10 @@ public class FollowState : State
             lastInMaxPlayerRange = Time.time;
         }    
 
-        if (!entity.CheckFacingPlayer())
+        if (!entity.CheckFacingPlayer() && Time.time >= lastFlipTime + FlipCooldown)
         {
             entity.Flip();
+            lastFlipTime = Time.time;
         }
         entity.SetVelocityX(stateData.movementSpeed);
         if ((!entity.CheckLedge() || entity.CheckWall()) && entity.CheckGround())

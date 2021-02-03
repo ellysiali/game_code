@@ -80,8 +80,6 @@ public class GameStatus : MonoBehaviour
 
         PlayerPrefs.DeleteAll();
         PlayerPrefs.SetFloat("coinCount", coinCount);
-        PlayerPrefs.SetFloat("attackMultiplier", attackMultiplier);
-        PlayerPrefs.SetFloat("defenseMultiplier", defenseMultiplier);
 
         PlayerPrefs.SetFloat("spawnPositionX", player.gameObject.transform.position.x);
         PlayerPrefs.SetFloat("spawnPositionY", player.gameObject.transform.position.y);
@@ -111,9 +109,13 @@ public class GameStatus : MonoBehaviour
         currentHealth = MaxHealth;
         currentMagic = MaxMagic;
         coinCount = PlayerPrefs.GetFloat("coinCount", 0);
-        attackMultiplier = PlayerPrefs.GetFloat("attackMultiplier", 1f);
-        defenseMultiplier = PlayerPrefs.GetFloat("defenseMultiplier", 1f);
+
+        attackMultiplier = 1f;
+        defenseMultiplier = 1f;
+        healthOverTime = 0f;
+        magicOverTime = 0f;
         BuffActive = false;
+        StopAllCoroutines();
 
         spawnPosition = new Vector2(PlayerPrefs.GetFloat("spawnPositionX", 0f), PlayerPrefs.GetFloat("spawnPositionY", -0.74f));
 
